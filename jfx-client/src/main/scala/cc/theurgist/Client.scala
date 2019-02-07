@@ -14,6 +14,7 @@ object Client extends JFXApp with StrictLogging {
   logger.info("Motrack client has been started")
 
 
+
   val fxml: jfxs.Parent = FXMLView(getClass.getResource("/jfx/main.fxml"), NoDependencyResolver)
 
 

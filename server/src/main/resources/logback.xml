@@ -1,7 +1,7 @@
 <configuration debug="false" scan="true" scanPeriod="30 seconds">
     <!-- ALL, TRACE, DEBUG, INFO, WARN, ERROR or OFF -->
 
-    <conversionRule conversionWord="lvlclrz" converterClass="cc.theurgist.system.FineLogbackLevelColorizer" />
+    <conversionRule conversionWord="lvlclrz" converterClass="FineLogbackLevelColorizer" />
     <!-- Pattern sting format description: http://logback.qos.ch/manual/layouts.html -->
 
     <property name="LOGS_ROOT" value="logs" />
