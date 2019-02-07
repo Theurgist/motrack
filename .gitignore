@@ -1,0 +1,13 @@
+## IDEA and Operating system
+.idea
+.directory
+
+
+### App's droppings
+*.log
+
+
+### SBT and JVM stuff
+target/
+project/boot/
+project/plugins/project/
