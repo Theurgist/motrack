@@ -1,24 +1,19 @@
 <configuration debug="false" scan="true" scanPeriod="30 seconds">
     <!-- ALL, TRACE, DEBUG, INFO, WARN, ERROR or OFF -->
-
-    <conversionRule conversionWord="lvlclrz" converterClass="FineLogbackLevelColorizer" />
     <!-- Pattern sting format description: http://logback.qos.ch/manual/layouts.html -->
+    <!-- immediateFlush as false quadruples logging throughput for file logger -->
+
+    <conversionRule conversionWord="lvlclrz" converterClass="cc.theurgist.system.FineLogbackLevelColorizer" />
 
     <property name="LOGS_ROOT" value="logs" />
     <property name="LOG_BASE_NAME" value="${project.build.finalName}" />
     <property name="LOG_BASE_EXTENSION" value="log" />
 
-
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <immediateFlush>true</immediateFlush>
+
         <encoder>
-            <!-- Output coloring support. To make this work in IDEA - download "Grep console" plugin -->
-            <!--<pattern>%d{HH:mm:ss.SSS/zzz} | %boldWhite(%-5level) |%green(%-10logger{10}) at %cyan(%-15class{15}) >> %yellow(%msg%n)</pattern>-->
-
-            <!--<pattern>%d{HH:mm:ss.SSS/zzz} | %lvlclrz(%-5level) | %-10.10t | %cyan(%-35class{27}) >> %yellow(%msg%n)</pattern>-->
-
             <pattern>🕑 %d{HH:mm:ss.SSS/zzz} 📶 %lvlclrz(%-5level) 🔌 %-10.10t 🍵 %-3L:%-30.30c{1.} 🗎 %lvlclrz(%m%n)</pattern>
-                    <!--%d{yyyy-MM-dd HH:mm:ss.SSS/zzz} %color{%-5p}| %-10.10t | %-30.30c{1.}: %-3L >> %color{%m}%n-->
-            <!--immediateFlush>true</immediateFlush-->
             <outputPatternAsHeader>true</outputPatternAsHeader>
         </encoder>
 
@@ -27,6 +22,7 @@
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOGS_ROOT}/${LOG_BASE_NAME}.log</file>
         <append>true</append>
+        <immediateFlush>false</immediateFlush>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOGS_ROOT}/%d{yyyy/MM, aux}/${LOG_BASE_NAME}-%d{yyyy-MM-dd}.log</fileNamePattern>
@@ -36,10 +32,7 @@
         </rollingPolicy>
 
         <encoder>
-            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS/zzz} | %-5level | %-25logger{40} at %-50class{140} >> %msg%n</pattern>-->
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS/zzz} | %-5level | %-50class{140} >> %msg%n</pattern>
-            <!-- immediateFlush as false quadruples logging throughput for file logger -->
-            <!--immediateFlush>true</immediateFlush-->
             <outputPatternAsHeader>true</outputPatternAsHeader>
         </encoder>
 
@@ -51,6 +44,8 @@
     <appender name="COLORED_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOGS_ROOT}/${LOG_BASE_NAME}-colored.log</file>
         <append>true</append>
+        <immediateFlush>false</immediateFlush>
+
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOGS_ROOT}/%d{yyyy/MM, aux}/${LOG_BASE_NAME}-%d{yyyy-MM-dd}-colored.log</fileNamePattern>
             <maxHistory>30</maxHistory>
@@ -59,11 +54,7 @@
         </rollingPolicy>
 
         <encoder>
-            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} | %boldWhite(%-5level) | %green(%-20logger{50}) at %cyan(%-20class{120}) >> %yellow(%msg%n)</pattern>-->
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} | %boldWhite(%-5level) | %cyan(%-20class{120}) >> %yellow(%msg%n)</pattern>
-                     <!--%d{yyyy-MM-dd HH:mm:ss.SSS/zzz} %color{%-5p}| %-10.10t | %-30.30c{1.}: %-3L >> %color{%m}%n-->
-            <!-- immediateFlush as false quadruples logging throughput for file logger -->
-            <!--immediateFlush>true</immediateFlush-->
             <outputPatternAsHeader>true</outputPatternAsHeader>
         </encoder>
 
@@ -72,44 +63,12 @@
         </filter>
     </appender>
 
-    <appender name="CLUSTERING_SOURCES_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOGS_ROOT}/cs-${LOG_BASE_NAME}.log</file>
-        <append>true</append>
-
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>cs-${LOGS_ROOT}/%d{yyyy/MM, aux}/clustering-sources_%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>30</maxHistory>
-            <!--<maxFileSize>200MB</maxFileSize>-->
-            <!--<totalSizeCap>2GB</totalSizeCap>-->
-        </rollingPolicy>
-
-        <encoder>
-            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS/zzz} | %-5level | %-25logger{40} at %-50class{140} >> %msg%n</pattern>-->
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS/zzz} | %-5level | %-50class{140} >> %msg%n</pattern>
-            <!-- immediateFlush as false quadruples logging throughput for file logger -->
-            <!--immediateFlush>true</immediateFlush-->
-            <outputPatternAsHeader>true</outputPatternAsHeader>
-        </encoder>
-
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>TRACE</level>
-        </filter>
-    </appender>
-
-
-
     <root level="INFO">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
         <appender-ref ref="COLORED_FILE" />
     </root>
 
-
-    <logger level="WARN"   name="io.netty"/>
-
-    <!-- additivity=false ensures access data only goes to the access log -->
-    <logger name="clusteringSourcesLog" level="TRACE" additivity="false">
-        <appender-ref ref="CLUSTERING_SOURCES_FILE"/>
-    </logger>
+    <logger level="WARN" name="io.netty"/>
 
 </configuration>
