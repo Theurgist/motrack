@@ -18,7 +18,7 @@ lazy val `tg-bot` = (project in file("tg-bot"))
   .dependsOn(lib)
 
 lazy val motrack = (project in file("."))
-  .aggregate(`jfx-client`, server, `tg-bot`)
+  .aggregate(lib, `jfx-client`, server, `tg-bot`)
   .settings(commonSettings ++ Seq(
     name := "motrack"
   ))
