@@ -10,4 +10,7 @@ case class Account (
     name: String,
     accType: AccountType,
     createdAt: Long,
+    currencyCode: String,
+
+    id: Option[String]
 )

@@ -9,4 +9,13 @@ object AccountType extends Enumeration {
     Crypto,
     Securities
     = Value
+
 }
+
+
+//object MyEnum extends Enumeration {
+//  type MyEnum = Value
+//  val A = Value("a")
+//  val B = Value("b")
+//  val C = Value("c")
+//}
