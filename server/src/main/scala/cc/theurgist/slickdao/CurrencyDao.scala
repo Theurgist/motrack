@@ -1,11 +1,11 @@
-package cc.theurgist.dao
+package cc.theurgist.slickdao
 
 import cc.theurgist.model.Currency
 import slick.jdbc.JdbcProfile
 import scala.language.higherKinds
 //import slick.jdbc.H2Profile.api._
 
-
+@Deprecated
 class CurrencyDao(val profile: JdbcProfile) {
   //import profile.api._
   import slick.jdbc.H2Profile.api._

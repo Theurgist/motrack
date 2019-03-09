@@ -1,4 +1,4 @@
-package cc.theurgist.dao
+package cc.theurgist.slickdao
 
 import cc.theurgist.model.{Account, AccountType}
 import cc.theurgist.model.AccountType.AccountType
@@ -7,7 +7,7 @@ import slick.jdbc.{JdbcProfile, JdbcType}
 
 import scala.language.higherKinds
 
-
+@Deprecated
 class AccountDao(val profile: JdbcProfile) {
   val currencyDao = new CurrencyDao(profile)
   //import profile.api._

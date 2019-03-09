@@ -1,6 +1,6 @@
 package cc.theurgist
 
-import cc.theurgist.dao.CurrencyDao
+import cc.theurgist.slickdao.CurrencyDao
 import cc.theurgist.model.Currency
 import org.scalatest._
 
