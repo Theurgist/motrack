@@ -14,11 +14,11 @@ class Migrator(cfg: DbConfig) extends StrictLogging {
     val c = Flyway.configure
       .dataSource(
         cfg.url,
-        null, //"sa",
-        null
+        cfg.user, //"sa",
+        cfg.password
       )
       .load
-    logger info s"DB connection for '${cfg.name}' has been set up"
+    logger info s"DB connection for '${cfg.configName}' has been set up"
     c
   }
 
