@@ -6,15 +6,19 @@ import com.typesafe.config.Config
   *
   * @param c base typesafe config object
   */
-class ConfigBranch(protected val c: Config) {
+class ConfigBranch(protected val c: Config, val path: String) {
+  def this(c: Config) = this(c, "")
 
   /**
-    * GEt subbranch of this branch
+    * Get subbranch of this branch
     *
     * @param path path relative to this configuration branch
     * @return ConfigBranch object
     */
-  def branch(path: String) = new ConfigBranch(c.getConfig(path))
+  def branch(path: String) = new ConfigBranch(
+    c.getConfig(path),
+    if (this.path.isEmpty) path else s"${this.path}.$path"
+  )
 
   /**
     * Read configuration key as an Option[T]
