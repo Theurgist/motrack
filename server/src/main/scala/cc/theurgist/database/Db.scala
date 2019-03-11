@@ -4,6 +4,9 @@ import java.sql.{Connection, DriverManager}
 import cc.theurgist.config.DbConfig
 import com.typesafe.scalalogging.StrictLogging
 
+/**
+  * Database connections manager
+  */
 object Db extends StrictLogging {
 
   /**
