@@ -1,29 +1,25 @@
 package cc.theurgist.migration
 
-import cc.theurgist.config.DbConfig
 import com.typesafe.scalalogging.StrictLogging
+import javax.sql.DataSource
 import org.flywaydb.core.Flyway
 
 /**
   * Machinery for database migrations application
-  * @param cfg database connection settings
+  *
+  * @param ds database connection settings
   */
-class Migrator(cfg: DbConfig) extends StrictLogging {
+class Migrator(ds: DataSource) extends StrictLogging {
 
   private val flyway: Flyway = {
-    val c = Flyway.configure
-      .dataSource(
-        cfg.url,
-        cfg.user, //"sa",
-        cfg.password
-      )
-      .load
-    logger info s"DB connection for '${cfg.configName}' has been set up"
+    val c = Flyway.configure.dataSource(ds).load
+    logger info s"DB connection for '${ds.toString}' has been set up"
     c
   }
 
   /**
     * Apply migrations
+    * Before applying migrations to in-memory database, make sure that there is already an open connection
     *
     * @return number of successfuly applied migrations
     */

@@ -1,6 +1,6 @@
 package cc.theurgist
-import cc.theurgist.config.DbConfig
-import cc.theurgist.database.{Db, InmemTcpServer}
+
+import cc.theurgist.database.Db
 import cc.theurgist.migration.Migrator
 import org.scalatest.{Matchers, WordSpec}
 
@@ -10,23 +10,20 @@ class FlywaySetupTest extends WordSpec with Matchers {
 
     "be able to setup" in {
       // Before applying migrations, we should open a connection first
-      Db.openInmem
-
-      val m = new Migrator(DbConfig.inmem.get)
-      m.migrate(true) should be > 0
-
+      val conn = Db.getInmemConnection
+      val m = new Migrator(Db.inmemDs.get)
+      val cnt = m.migrate(true)
+      cnt should be > 0
     }
 
     "support simple queries" in {
-      val conn = InmemTcpServer.getInmemConnection.get
+      val conn = Db.getInmemConnection.get                  // This snippet has been moved to InmemDbSetup trait
+      new Migrator(Db.inmemDs.get).migrate(true)  //
+
       conn.prepareStatement("""
-                              | insert into currency values(
+                              | insert into CURRENCY values(
                               | 'TeST', 'TestCurrency', '₱', 'TestCountry', 'false')
                               | """.stripMargin).execute()
-
-//      Currency("rur", "Russian Ruble", "\u20BD", Option("Russian Federation"), isCrypto = false),
-//      Currency("usd", "United States Dollar", "$", Option("United States of America"), isCrypto = false),
-//      Currency("eur", "Euro", "€", Option("Europe"), isCrypto = false),
 
       val rSize = conn.prepareStatement("select count(*) from currency where CODE = 'TeST'").executeQuery()
       rSize.first()

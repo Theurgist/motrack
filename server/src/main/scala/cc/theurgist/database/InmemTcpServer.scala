@@ -18,7 +18,7 @@ object InmemTcpServer extends StrictLogging {
     * @return optional connection object, if succeeded
     */
   def getInmemConnection: Option[Connection] = {
-    Db.openInmem match {
+    Db.getInmemConnection match {
       case connOpt: Some[Connection] =>
         start()
         if (isRunning) {
@@ -35,9 +35,9 @@ object InmemTcpServer extends StrictLogging {
         None
     }
 
-//        conn.createStatement.execute("create table test(id int)")
-//        System.out.println("Press [Enter] to stop.")
-//        System.in.read
+    // conn.createStatement.execute("create table test(id int)")
+    // System.out.println("Press [Enter] to stop.")
+    // System.in.read
   }
 
   /**
@@ -55,6 +55,15 @@ object InmemTcpServer extends StrictLogging {
   }
 
   /**
+    * Check server status
+    *
+    * @return true if it is running, false - if not
+    */
+  def isRunning: Boolean = {
+    server.isRunning(true)
+  }
+
+  /**
     * Stop TCP server
     *
     * @return true if it is already not running or just stopped, false - on some error
@@ -66,15 +75,6 @@ object InmemTcpServer extends StrictLogging {
       isRunning
     } else
       true
-  }
-
-  /**
-    * Check server status
-    *
-    * @return true if it is running, false - if not
-    */
-  def isRunning: Boolean = {
-    server.isRunning(true)
   }
 
 }

@@ -6,3 +6,7 @@ create table CURRENCY (
   IS_CRYPTO boolean
 );
 
+--      Currency("rur", "Russian Ruble", "\u20BD", Option("Russian Federation"), isCrypto = false),
+--      Currency("usd", "United States Dollar", "$", Option("United States of America"), isCrypto = false),
+--      Currency("eur", "Euro", "€", Option("Europe"), isCrypto = false),
+-- INSERT INTO Circle (radius) VALUES (?)

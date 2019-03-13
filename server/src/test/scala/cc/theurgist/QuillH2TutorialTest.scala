@@ -1,16 +1,10 @@
 package cc.theurgist
-import cc.theurgist.config.DbConfig
-import cc.theurgist.database.Db
-import cc.theurgist.migration.Migrator
 import io.getquill._
 import org.scalatest.{Matchers, WordSpec}
 
-class QuillH2Test extends WordSpec with Matchers {
+class QuillH2TutorialTest extends WordSpec with Matchers {
   "quill" should {
     "execute simple queries" in {
-      val conn = Db.openInmem.get
-      new Migrator(DbConfig.inmem.get).migrate(true)
-
       val ctx = new SqlMirrorContext(MirrorSqlDialect, Literal)
       import ctx._
 
@@ -23,7 +17,7 @@ class QuillH2Test extends WordSpec with Matchers {
         query[Circle].map(c => pi * c.radius * c.radius)
       }
       // Quotations can also contain high-order functions and inline values
-      val area = quote { (c: Circle) =>
+      val area = quote { c: Circle =>
         {
           val r2 = c.radius * c.radius
           pi * r2
@@ -42,7 +36,7 @@ class QuillH2Test extends WordSpec with Matchers {
 
       // Scala doesn’t have support for high-order functions with type parameters.
       // It’s possible to use method type parameter for this purpose:
-      def existsAny[T] = quote { (xs: Query[T]) => (p: T => Boolean) =>
+      def existsAny[T] = quote { xs: Query[T] => (p: T => Boolean) =>
         xs.filter(p(_)).nonEmpty
       }
 
@@ -57,7 +51,7 @@ class QuillH2Test extends WordSpec with Matchers {
         query[Circle].filter(c => c.radius > 10)
       }
 
-      ctx.run(qDynamic) // Dynamic query
+      val r1 = ctx.run(qDynamic) // Dynamic query
 
       // Quoting is implicit when writing a query in a run statement.
       ctx.run(query[Circle].map(_.radius))
@@ -71,7 +65,7 @@ class QuillH2Test extends WordSpec with Matchers {
       def biggerThan(i: Float) = quote {
         query[Circle].filter(r => r.radius > lift(i))
       }
-      ctx.run(biggerThan(10)) // SELECT r.radius FROM Circle r WHERE r.radius > ?
+      val r2 = ctx.run(biggerThan(10)) // SELECT r.radius FROM Circle r WHERE r.radius > ?
 
       // Lifted queries
       //  A Traversable instance can be lifted as a Query. There are two main usages for lifted queries:
@@ -80,16 +74,17 @@ class QuillH2Test extends WordSpec with Matchers {
       def find(radiusList: List[Float]) = quote {
         query[Circle].filter(r => liftQuery(radiusList).contains(r.radius))
       }
-      ctx.run(find(List(1.1F, 1.2F)))
+      val r3 = ctx.run(find(List(1.1F, 1.2F)))
       // SELECT r.radius FROM Circle r WHERE r.radius IN (?)
 
       //  batch action
       def insert(circles: List[Circle]) = quote {
         liftQuery(circles).foreach(c => query[Circle].insert(c))
       }
-      ctx.run(insert(List(Circle(1.1F), Circle(1.2F))))
+      val r4 = ctx.run(insert(List(Circle(1.1F), Circle(1.2F))))
       // INSERT INTO Circle (radius) VALUES (?)
 
+      r4
     }
 
   }
