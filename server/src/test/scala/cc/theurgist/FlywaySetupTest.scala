@@ -21,15 +21,15 @@ class FlywaySetupTest extends WordSpec with Matchers {
       new Migrator(Db.inmemDs.get).migrate(true)  //
 
       conn.prepareStatement("""
-                              | insert into CURRENCY values(
+                              | insert into currencies values(
                               | 'TeST', 'TestCurrency', '₱', 'TestCountry', 'false')
                               | """.stripMargin).execute()
 
-      val rSize = conn.prepareStatement("select count(*) from currency where CODE = 'TeST'").executeQuery()
+      val rSize = conn.prepareStatement("select count(*) from currencies where CODE = 'TeST'").executeQuery()
       rSize.first()
       rSize.getInt("COUNT(*)") should be(1)
 
-      val rData = conn.prepareStatement("select * from currency where CODE = 'TeST'").executeQuery()
+      val rData = conn.prepareStatement("select * from currencies where CODE = 'TeST'").executeQuery()
       rData.first()
       rData.getString("code") should be("TeST")
       // System.out.println("Press [Enter] to stop.")

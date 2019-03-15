@@ -3,7 +3,7 @@ package cc.theurgist.model.security
 /**
   * End user
   */
-class User (
+case class User (
     login: String,
     name: String,
 )

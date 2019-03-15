@@ -4,7 +4,7 @@ import java.sql.Connection
 import cc.theurgist.config.DbConfig
 import com.typesafe.scalalogging.StrictLogging
 import com.zaxxer.hikari.HikariDataSource
-import io.getquill.{H2JdbcContext, SnakeCase}
+import io.getquill.{H2JdbcContext, QueryProbing, SnakeCase}
 
 /**
   * Database connections manager

@@ -9,4 +9,4 @@ case class Currency(
     unicode: String,
     country: Option[String],
     isCrypto: Boolean
-)
+) extends Entity

@@ -1,4 +1,4 @@
-create table CURRENCY (
+create table currencies (
   CODE varchar(20) not null,
   NAME varchar(100) not null,
   UNICODE varchar(10) not null,
