@@ -30,35 +30,44 @@ class CurrencyDAO(ctx: H2JdbcContext[SnakeCase]) extends StrictLogging {
     }
   }
 
-//  private def byName = quote {
-//    (name: String) => by((c: Currency) => c.name == name)
-//  }
+//    private def byName = quote {
+//      (name: String) => by((c: Currency) => c.name == name)
+//    }
 //
-//  def findByName(name: String) = {
-//    ctx.run(byName,name)
-//  }
+//    def findByName(name: String) = {
+//      ctx.run(byName,name)
+//    }
 
-  //implicit val filterEncoder = MappedEncoding[Currency => Boolean, Boolean](f => f(_))
 
   private def byCode(code: String) = quote {
     currencies.filter(_.code == lift(code))
   }
 
+  //implicit val filterEncoder = MappedEncoding[Currency => Boolean, Boolean](f => f(_))
+
   private def findByName(name: String) = {
 
-    val checker: ctx.Quoted[Currency => Boolean] = quote { (c: Currency) =>
-      c.name == lift(name)
-    }
+    // Dynamic
+    ctx.run(quote { bySomething(
+      (c: Currency) => c.name == lift(name))
+    })
 
-    quote {
-      ctx.run(quote {
-        bySomething(checker)
-      })
+    // Dynamic
+    val checker: ctx.Quoted[Currency => Boolean] = quote {
+      c: Currency => c.name == lift(name)
     }
+    ctx.run(quote { bySomething(checker) })
+
+    // Dynamic
+    val cf = quote { currencies.filter(c => checker(c)) }
+    ctx.run(quote { cf })
+
+    // How to do static??
+
   }
 
   // https://github.com/getquill/quill/issues/297
-  private def bySomething(f: Currency => Boolean) = quote {
+  private def bySomething(f: ctx.Quoted[Currency => Boolean]) = quote {
     currencies.filter(c => f(c))
   }
 
