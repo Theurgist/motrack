@@ -20,14 +20,8 @@ class CurrencyDAO(ctx: H2JdbcContext[SnakeCase]) extends StrictLogging {
     ctx.run(byCode(code).delete)
   }
 
-  def findByCode(code: String): Option[Currency] = {
-    ctx.run(quote {
-      byCode(code)
-    }) match {
-      case value :: Nil => Some(value)
-      case Nil          => None
-      case _            => throw new Error(s"There are more than 1 values for code '$code'")
-    }
+  private def byCode(code: String) = quote {
+    currencies.filter(_.code == lift(code))
   }
 
 //    private def byName = quote {
@@ -38,9 +32,14 @@ class CurrencyDAO(ctx: H2JdbcContext[SnakeCase]) extends StrictLogging {
 //      ctx.run(byName,name)
 //    }
 
-
-  private def byCode(code: String) = quote {
-    currencies.filter(_.code == lift(code))
+  def findByCode(code: String): Option[Currency] = {
+    ctx.run(quote {
+      byCode(code)
+    }) match {
+      case value :: Nil => Some(value)
+      case Nil          => None
+      case _            => throw new Error(s"There are more than 1 values for code '$code'")
+    }
   }
 
   //implicit val filterEncoder = MappedEncoding[Currency => Boolean, Boolean](f => f(_))
@@ -48,23 +47,23 @@ class CurrencyDAO(ctx: H2JdbcContext[SnakeCase]) extends StrictLogging {
   private def findByName(name: String) = {
 
     // Dynamic
-    ctx.run(quote { bySomething(
-      (c: Currency) => c.name == lift(name))
-    })
+    ctx.run(quote { bySomething((c: Currency) => c.name == lift(name)) })
 
     // Dynamic
-    val checker: ctx.Quoted[Currency => Boolean] = quote {
-      c: Currency => c.name == lift(name)
-    }
+    def checker = quote { c: Currency => c.name == lift(name) }
     ctx.run(quote { bySomething(checker) })
 
-    // Dynamic
-    val cf = quote { currencies.filter(c => checker(c)) }
+    // NOW STATIC!!
+    def cf = quote { currencies.filter(c => checker(c)) }
     ctx.run(quote { cf })
 
-    // How to do static??
+    // Reference static query
+    ctx.run(quote { currencies.filter((c: Currency) => c.name == lift(name)) })
+
+    // How to do static with little generification??
 
   }
+
 
   // https://github.com/getquill/quill/issues/297
   private def bySomething(f: ctx.Quoted[Currency => Boolean]) = quote {
