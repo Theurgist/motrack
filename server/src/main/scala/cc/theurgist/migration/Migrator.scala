@@ -13,7 +13,7 @@ class Migrator(ds: DataSource) extends StrictLogging {
 
   private val flyway: Flyway = {
     val c = Flyway.configure.dataSource(ds).load
-    logger info s"DB connection for '${ds.toString}' has been set up"
+    logger debug s"DB connection for '${ds.toString}' has been set up"
     c
   }
 

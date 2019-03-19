@@ -4,7 +4,7 @@ import cc.theurgist.model.Currency
 import com.typesafe.scalalogging.StrictLogging
 import io.getquill.{H2JdbcContext, SnakeCase}
 
-class CurrencyDAO(ctx: H2JdbcContext[SnakeCase]) extends StrictLogging {
+class CurrencyDAO(context: H2JdbcContext[SnakeCase]) extends BaseCRUD[Currency](context) with StrictLogging {
   import ctx._
   private val currencies = quote(querySchema[Currency]("currencies"))
 
@@ -20,54 +20,17 @@ class CurrencyDAO(ctx: H2JdbcContext[SnakeCase]) extends StrictLogging {
     ctx.run(byCode(code).delete)
   }
 
-  private def byCode(code: String) = quote {
-    currencies.filter(_.code == lift(code))
-  }
-
-//    private def byName = quote {
-//      (name: String) => by((c: Currency) => c.name == name)
-//    }
-//
-//    def findByName(name: String) = {
-//      ctx.run(byName,name)
-//    }
-
   def findByCode(code: String): Option[Currency] = {
-    ctx.run(quote {
-      byCode(code)
-    }) match {
-      case value :: Nil => Some(value)
-      case Nil          => None
-      case _            => throw new Error(s"There are more than 1 values for code '$code'")
-    }
+    extractUnique(ctx.run(quote { byCode(code) }), s"code '$code'")
   }
-
-  //implicit val filterEncoder = MappedEncoding[Currency => Boolean, Boolean](f => f(_))
-
-  private def findByName(name: String) = {
-
-    // Dynamic
-    ctx.run(quote { bySomething((c: Currency) => c.name == lift(name)) })
-
-    // Dynamic
-    def checker = quote { c: Currency => c.name == lift(name) }
-    ctx.run(quote { bySomething(checker) })
-
-    // NOW STATIC!!
-    def cf = quote { currencies.filter(c => checker(c)) }
+  
+  def findByName(name: String): List[Currency] = {
+    // Compiles as static
+    val cf = quote { byName(name) }
     ctx.run(quote { cf })
-
-    // Reference static query
-    ctx.run(quote { currencies.filter((c: Currency) => c.name == lift(name)) })
-
-    // How to do static with little generification??
-
   }
 
-
-  // https://github.com/getquill/quill/issues/297
-  private def bySomething(f: ctx.Quoted[Currency => Boolean]) = quote {
-    currencies.filter(c => f(c))
-  }
-
+  private def byCode(code: String) = quote { currencies.filter(_.code == lift(code)) }
+  private def byName(name: String)                                 = quote { currencies.filter(_.name == lift(name)) }
+  private def byNamePartial(a: ctx.Quoted[Currency])(name: String) = quote { a.name == lift(name) }
 }

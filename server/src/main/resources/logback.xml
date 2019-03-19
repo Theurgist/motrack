@@ -70,5 +70,7 @@
     </root>
 
     <logger level="WARN" name="io.netty"/>
+    <logger level="WARN" name="org.flywaydb"/>
+    <logger level="WARN" name="com.zaxxer"/>
 
 </configuration>
