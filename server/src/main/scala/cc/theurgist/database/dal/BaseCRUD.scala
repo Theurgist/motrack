@@ -1,22 +1,23 @@
 package cc.theurgist.database.dal
 
+import cc.theurgist.database.Db.InmemContext
 import com.typesafe.scalalogging.StrictLogging
-import io.getquill.{H2JdbcContext, SnakeCase}
 
 import scala.language.experimental.macros
 
 /**
-  * NON-WORKING EXPERIMENT
-  * Needs investigation. Because of strong compile-time types inferring engine is struggling with
-  * generic type for quotes
+  * Needs investigation. Because of quite rigid compile-time types inferring engine is struggling with
+  * generic type for quotes. Even if code does compile - any attempt to extract generified methods
+  * breaks static query compilation, forcing fallback to dynamic query because of mandatory
+  * types annotation, which, on the other hand, should be avoided while using Quill.
   *
   *
-  * Some Hints for this boilerplate-parade reduction (it needs macro...)
+  * Some Hints for this boilerplate-parade reduction (it needs macro magic)
   *   https://stackoverflow.com/questions/44784310/how-to-write-generic-function-with-scala-quill-io-library/44797199#44797199
   *   https://github.com/getquill/quill-example/
   *
   */
-abstract class BaseCRUD[T](protected val ctx: H2JdbcContext[SnakeCase]) extends StrictLogging {
+abstract class BaseCRUD[T](protected val ctx: InmemContext) extends StrictLogging {
 
   /**
     * Get exactly one optional value or throw an exception
@@ -35,15 +36,5 @@ abstract class BaseCRUD[T](protected val ctx: H2JdbcContext[SnakeCase]) extends 
         throw new Error(msg)
     }
   }
-  //implicit val encT: Encoder[T]
-  //protected val table: ctx.Quoted[ctx.EntityQuery[T]] //= quote(querySchema[T](""))
-
-//  protected def qInsert(c: T) = quote {
-//    table.insert(lift(c))
-//  }
-//
-//  protected def qInsert(cs: Iterable[T]) = quote {
-//    liftQuery(cs).foreach(c => table.insert(c))
-//  }
 
 }

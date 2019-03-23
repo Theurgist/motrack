@@ -2,6 +2,7 @@ package cc.theurgist.database
 import java.sql.Connection
 
 import cc.theurgist.config.DbConfig
+import cc.theurgist.quill.MacroQueries
 import com.typesafe.scalalogging.StrictLogging
 import com.zaxxer.hikari.HikariDataSource
 import io.getquill.{H2JdbcContext, QueryProbing, SnakeCase}
@@ -10,6 +11,8 @@ import io.getquill.{H2JdbcContext, QueryProbing, SnakeCase}
   * Database connections manager
   */
 object Db extends StrictLogging {
+  type InmemContext = H2JdbcContext[SnakeCase] with MacroQueries
+
   lazy val inmemDs: Option[HikariDataSource] = {
     DbConfig.inmem match {
       case Some(cfg) =>
@@ -41,10 +44,10 @@ object Db extends StrictLogging {
     }
   }
 
-  def getInmemCtx: Option[H2JdbcContext[SnakeCase]] = {
+  def getInmemCtx: Option[InmemContext] = {
     inmemDs match {
       case Some(ds) =>
-        Some(new H2JdbcContext[SnakeCase](SnakeCase, ds))
+        Some(new H2JdbcContext[SnakeCase](SnakeCase, ds) with MacroQueries)
       case None =>
         logger.error(s"Failed to retrieve quill context for in-memory database")
         None

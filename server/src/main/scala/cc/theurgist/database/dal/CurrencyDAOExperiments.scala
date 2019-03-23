@@ -1,10 +1,10 @@
 package cc.theurgist.database.dal
 
+import cc.theurgist.database.Db.InmemContext
 import cc.theurgist.model.Currency
 import com.typesafe.scalalogging.StrictLogging
-import io.getquill.{H2JdbcContext, SnakeCase}
 
-class CurrencyDAOExperiments(context: H2JdbcContext[SnakeCase]) extends BaseCRUD(context) with StrictLogging {
+class CurrencyDAOExperiments(context: InmemContext) extends BaseCRUD(context) with StrictLogging {
   import ctx._
   private val currencies = quote(querySchema[Currency]("currencies"))
 
@@ -78,6 +78,19 @@ class CurrencyDAOExperiments(context: H2JdbcContext[SnakeCase]) extends BaseCRUD
   // https://github.com/getquill/quill/issues/297
   private def bySomething(f: ctx.Quoted[Currency => Boolean]) = quote {
     currencies.filter(c => f(c))
+  }
+
+  def insertOrUpdateThroughMacro(c: Currency) = {
+    //ctx.run(insertOrUpdate(c, (t: Currency) => t.code == lift(c.code)))
+  }
+
+  //https://github.com/getquill/quill/blob/master/CHANGELOG.md
+  def maybeItWillHelp() = {
+    // Anonymous classes aren't supported for function declaration anymore ...
+    // old
+    //    val q = quote { new { def apply[T](q: Query[T]) = ... } }
+    //  new
+    //    def q[T] = quote { (q: Query[T] => ... }
   }
 
 }

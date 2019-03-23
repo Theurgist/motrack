@@ -1,14 +1,5 @@
 name := "jfx-client"
 
-scalacOptions ++= Seq(
-  "-unchecked",
-  "-deprecation",
-  "-Xcheckinit",
-  "-encoding",
-  "utf8",
-  "-feature"
-)
-
 // Fork a new JVM for 'run' and 'test:run', to avoid JavaFX double initialization problems
 fork := true
 mainClass in (Compile, run) := Some("cc.theurgist.Client")
