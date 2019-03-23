@@ -9,11 +9,11 @@ class CurrencyDAO(context: InmemContext) extends BaseCRUD[Currency](context) wit
   private val currencies = quote(querySchema[Currency]("currencies"))
 
   def insert(c: Currency): Long =
-    ctx.run { quote(currencies.insert(lift(c))) }
+    ctx.run { quote(currencies.insert(lift(c))).returning(_.id) }
 
   def insert(cs: Seq[Currency]): List[Long] = ctx.run {
     quote {
-      liftQuery(cs).foreach(c => currencies.insert(c))
+      liftQuery(cs).foreach(c => currencies.insert(c).returning(_.id))
     }
   }
 

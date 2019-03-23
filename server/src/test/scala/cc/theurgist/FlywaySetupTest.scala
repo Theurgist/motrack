@@ -22,7 +22,7 @@ class FlywaySetupTest extends WordSpec with Matchers {
 
       conn.prepareStatement("""
                               | insert into currencies values(
-                              | 'TeST', 'TestCurrency', '₱', 'TestCountry', 'false')
+                              | null, 'TeST', 'TestCurrency', '₱', 'TestCountry', 'false')
                               | """.stripMargin).execute()
 
       val rSize = conn.prepareStatement("select count(*) from currencies where CODE = 'TeST'").executeQuery()

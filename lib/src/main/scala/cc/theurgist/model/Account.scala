@@ -5,12 +5,11 @@ import cc.theurgist.model.AccountType.AccountType
 /**
   * Money deposit entry
   */
-case class Account (
+case class Account(
+    id: Long,
     ownerId: String,
     name: String,
     accType: AccountType,
     createdAt: Long,
-    currencyCode: String,
-
-    id: Option[String]
-)
+    currencyCode: String
+) extends WithId[Long]
