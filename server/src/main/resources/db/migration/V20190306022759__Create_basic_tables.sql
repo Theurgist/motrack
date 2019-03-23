@@ -15,8 +15,12 @@ create table users
 );
 create table accounts
 (
-    ID       bigserial not null primary key,
-    OWNER_ID int references users (ID)
+    ID          bigserial    not null primary key,
+    OWNER_ID    int          not null references users (ID),
+    CURRENCY_ID int          not null references currencies (ID),
+    NAME        varchar(100) not null,
+    ACC_TYPE    smallint     not null,
+    CREATED_AT  timestamp    not null
 );
 
 create unique index currencies_idx

@@ -6,7 +6,9 @@ import cc.theurgist.model.WithId
   * End user
   */
 case class User(
-    id: Int,
+    id: UserId,
     login: String,
     name: String,
-) extends WithId[Int]
+) extends WithId[UserId]
+
+case class UserId(id: Int) extends AnyVal

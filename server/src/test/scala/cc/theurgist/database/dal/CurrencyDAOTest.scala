@@ -1,7 +1,7 @@
 package cc.theurgist.database.dal
 
 import cc.theurgist.database.Db
-import cc.theurgist.model.Currency
+import cc.theurgist.model.{AccountId, Currency, CurrencyId}
 import cc.theurgist.testharness.InmemDbSetup
 import org.scalatest.{BeforeAndAfterEach, Matchers, WordSpec}
 
@@ -11,9 +11,9 @@ class CurrencyDAOTest extends WordSpec with BeforeAndAfterEach with Matchers wit
   "Currencies" should {
     "being inserted" in {
       val cs = List(
-        Currency(0, "rur", "Russian Ruble", "\u20BD", Option("Russian Federation"), isCrypto = false),
-        Currency(0, "usd", "United States Dollar", "$", Option("United States of America"), isCrypto = false),
-        Currency(0, "eur", "Euro", "€", Option("Europe"), isCrypto = false),
+        Currency(CurrencyId.none, "rur", "Russian Ruble", "\u20BD", Option("Russian Federation"), isCrypto = false),
+        Currency(CurrencyId.none, "usd", "United States Dollar", "$", Option("United States of America"), isCrypto = false),
+        Currency(CurrencyId.none, "eur", "Euro", "€", Option("Europe"), isCrypto = false),
       )
       val newId = dao.insert(cs.head)
       val insertedHead = dao.findByCode(cs.head.code).head
