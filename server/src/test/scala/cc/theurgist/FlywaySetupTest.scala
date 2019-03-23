@@ -13,7 +13,8 @@ class FlywaySetupTest extends WordSpec with Matchers {
       val conn = Db.getInmemConnection
       val m = new Migrator(Db.inmemDs.get)
       val cnt = m.migrate(true)
-      cnt should be > 0
+      cnt should be >= 0
+      conn.foreach(_.close())
     }
 
     "support simple queries" in {
@@ -34,6 +35,7 @@ class FlywaySetupTest extends WordSpec with Matchers {
       rData.getString("code") should be("TeST")
       // System.out.println("Press [Enter] to stop.")
       // System.in.read
+      conn.close()
     }
 
   }

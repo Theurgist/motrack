@@ -1,7 +1,7 @@
 package cc.theurgist.database.dal
 
 import cc.theurgist.database.Db.InmemContext
-import cc.theurgist.model.{Transaction, TransactionId}
+import cc.theurgist.model.{AccountId, Transaction, TransactionId}
 import com.typesafe.scalalogging.StrictLogging
 
 class TransactionDAO(context: InmemContext) extends BaseCRUD[Transaction](context) with StrictLogging {
@@ -16,6 +16,13 @@ class TransactionDAO(context: InmemContext) extends BaseCRUD[Transaction](contex
     quote(liftQuery(ox).foreach(o => transactions.insert(o).returning(_.id)))
   }
 
+  def calcBalance(aid: AccountId): Double = {
+    //ctx.run (byAccId(aid).map(t => t.amount * t.conversionRate).sum).getOrElse(0.0)
+    val inbound = ctx.run (byAccIdInbound(aid).map(t => t.amount * t.conversionRate).sum)
+    val outbound = ctx.run (byAccIdInbound(aid).map(t => t.amount * t.conversionRate).sum)
+    inbound.getOrElse(0.0) - outbound.getOrElse(0.0)
+  }
+
   def delete(id: TransactionId): Long = ctx.run { byId(id).delete }
 
   def find(id: TransactionId): Option[Transaction] = {
@@ -23,5 +30,14 @@ class TransactionDAO(context: InmemContext) extends BaseCRUD[Transaction](contex
   }
 
   private def byId(id: TransactionId) = quote { transactions.filter(_.id == lift(id)) }
+  private def byAccId(aid: AccountId) = quote(
+    transactions.filter(t => t.destination.contains(lift(aid)) || t.source.contains(lift(aid)))
+  )
+  private def byAccIdInbound(aid: AccountId) = quote {
+    transactions.filter(t => t.destination.contains(lift(aid)))
+  }
+  private def byAccIdOutbound(aid: AccountId) = quote {
+    transactions.filter(t => t.source.contains(lift(aid)))
+  }
 
 }

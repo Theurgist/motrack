@@ -18,5 +18,6 @@ trait InmemDbSetup extends TestSuite with BeforeAndAfterAll {
 
   override def afterAll(): Unit = {
     super.afterAll()
+    conn.close()
   }
 }

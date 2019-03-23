@@ -9,9 +9,10 @@ case class Transaction
     id: TransactionId,
     actor: UserId,
     at: LocalDateTime,
-    source: Option[Int],
-    destination: Option[Int],
-    conversionRate: Double
+    source: Option[AccountId],
+    destination: Option[AccountId],
+    conversionRate: Double,
+    amount: Double
 ) extends WithId[TransactionId]
 
 case class TransactionId(id: Long) extends AnyVal

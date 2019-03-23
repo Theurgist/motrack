@@ -1,7 +1,7 @@
 package cc.theurgist.database.dal
 
 import cc.theurgist.database.Db
-import cc.theurgist.model.{AccountId, Currency, CurrencyId}
+import cc.theurgist.model.{Currency, CurrencyId}
 import cc.theurgist.testharness.InmemDbSetup
 import org.scalatest.{BeforeAndAfterEach, Matchers, WordSpec}
 
@@ -15,7 +15,7 @@ class CurrencyDAOTest extends WordSpec with BeforeAndAfterEach with Matchers wit
         Currency(CurrencyId.none, "usd", "United States Dollar", "$", Option("United States of America"), isCrypto = false),
         Currency(CurrencyId.none, "eur", "Euro", "€", Option("Europe"), isCrypto = false),
       )
-      val newId = dao.insert(cs.head)
+      val newId        = dao.insert(cs.head)
       val insertedHead = dao.findByCode(cs.head.code).head
       insertedHead.id should be(newId)
       insertedHead.unicode should be("\u20BD")

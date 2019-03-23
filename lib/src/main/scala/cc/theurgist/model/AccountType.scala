@@ -13,6 +13,8 @@ object AccountType {
     case 5 => Securities
     case _ => throw new IllegalArgumentException(s"Badd account type code: $code")
   }
+
+  val allTypes: Array[AccountType] = Array(BankAccount, CreditAccount, PhysicalMoney, Crypto, Securities)
 }
 
 case object BankAccount   extends AccountType { val code = 1; override def toString: String = "BankAccount"   }
