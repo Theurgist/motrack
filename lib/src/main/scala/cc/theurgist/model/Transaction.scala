@@ -15,7 +15,7 @@ case class Transaction
     amount: Double
 ) extends WithId[TransactionId]
 
-case class TransactionId(id: Long) extends AnyVal
+class TransactionId(val id: Long) extends AnyVal
 object TransactionId {
-  val none: TransactionId = TransactionId(0L)
+  val none: TransactionId = new TransactionId(0L)
 }

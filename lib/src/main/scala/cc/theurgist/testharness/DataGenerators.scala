@@ -16,7 +16,7 @@ object DataGenerators {
   def genPassword: PasswordValidation.PasswordData =
     PasswordValidation.encrypt(Random.nextString(50))
   def genLocalDateTime: LocalDateTime =
-    LocalDateTime.ofEpochSecond(Random.nextLong(), Random.nextInt(), ZoneOffset.UTC)
+    LocalDateTime.ofEpochSecond(Random.nextLong() % 1553414782L, Random.nextInt(1000), ZoneOffset.UTC)
   def genAccountType: AccountType =
     AccountType.allTypes(Random.nextInt(AccountType.allTypes.length))
 
@@ -64,16 +64,16 @@ object DataGenerators {
       )
   }
 
-  def genTransactions(n: Int, a1: Account, a2: Account): List[Transaction] = {
+  def genTransactions(n: Int, from: Account, to: Account): List[Transaction] = {
     for {
       _ <- 1 to n toList
     } yield
       Transaction(
         TransactionId.none,
-        a1.ownerId,
+        from.ownerId,
         genLocalDateTime,
-        Some(a1.id),
-        Some(a2.id),
+        Some(from.id),
+        Some(to.id),
         0.5 + Random.nextDouble(),
         Random.nextInt()
       )

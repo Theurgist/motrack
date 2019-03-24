@@ -16,7 +16,7 @@ case class Account(
     createdAt: LocalDateTime,
 ) extends WithId[AccountId]
 
-case class AccountId(id: Long) extends AnyVal
+class AccountId(val id: Long) extends AnyVal
 object AccountId {
-  val none: AccountId = AccountId(0L)
+  val none: AccountId = new AccountId(0L)
 }

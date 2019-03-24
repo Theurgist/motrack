@@ -14,7 +14,7 @@ case class User(
     salt: PasswordSalt
 ) extends WithId[UserId]
 
-case class UserId(id: Int) extends AnyVal
+class UserId(val id: Int) extends AnyVal
 object UserId {
-  val none: UserId = UserId(0)
+  val none: UserId = new UserId(0)
 }

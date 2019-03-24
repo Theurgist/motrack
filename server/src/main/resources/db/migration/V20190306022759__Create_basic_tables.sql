@@ -27,13 +27,13 @@ create table accounts
 
 create table transactions
 (
-    ID             bigserial        not null primary key,
-    actor          int              not null references users (ID),
-    at             timestamp        not null,
-    source         bigint references accounts (ID),
-    destination    bigint references accounts (ID),
-    conversionRate double precision not null,
-    amount         double precision not null
+    ID              bigserial        not null primary key,
+    actor           int              not null references users (ID),
+    at              timestamp        not null,
+    source          bigint references accounts (ID),
+    destination     bigint references accounts (ID),
+    conversion_rate double precision not null,
+    amount          double precision not null
 );
 
 create unique index currencies_idx

@@ -13,7 +13,7 @@ case class Currency(
 ) extends Entity with WithId[CurrencyId]
 
 
-case class CurrencyId(id: Int) extends AnyVal
+class CurrencyId(val id: Int) extends AnyVal
 object CurrencyId {
-  val none: CurrencyId = CurrencyId(0)
+  val none: CurrencyId = new CurrencyId(0)
 }

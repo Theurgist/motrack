@@ -19,7 +19,7 @@ class TransactionDAO(context: InmemContext) extends BaseCRUD[Transaction](contex
   def calcBalance(aid: AccountId): Double = {
     //ctx.run (byAccId(aid).map(t => t.amount * t.conversionRate).sum).getOrElse(0.0)
     val inbound = ctx.run (byAccIdInbound(aid).map(t => t.amount * t.conversionRate).sum)
-    val outbound = ctx.run (byAccIdInbound(aid).map(t => t.amount * t.conversionRate).sum)
+    val outbound = ctx.run (byAccIdOutbound(aid).map(t => t.amount).sum)
     inbound.getOrElse(0.0) - outbound.getOrElse(0.0)
   }
 
