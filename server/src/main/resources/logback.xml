@@ -3,7 +3,7 @@
     <!-- Pattern sting format description: http://logback.qos.ch/manual/layouts.html -->
     <!-- immediateFlush as false quadruples logging throughput for file logger -->
 
-    <conversionRule conversionWord="lvlclrz" converterClass="cc.theurgist.system.FineLogbackLevelColorizer" />
+    <conversionRule conversionWord="lvlclrz" converterClass="cc.theurgist.motrack.server.FineLogbackLevelColorizer" />
 
     <property name="LOGS_ROOT" value="logs" />
     <property name="LOG_BASE_NAME" value="${project.build.finalName}" />
