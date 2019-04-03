@@ -23,6 +23,8 @@ class CurrencyDAOTest extends WordSpec with BeforeAndAfterEach with Matchers wit
       dao.insert(cs.tail).length should be(2)
       dao.findByCode(cs(2).code).head.unicode should be("€")
 
+      Thread.sleep(100000)
+
       //val updating = cs(2).copy(name = "Tugrik")
       //dao.insertOrUpdateThroughMacro(updating)
       //dao.findByCode(cs(2).code).head.name should be("Tugrik")

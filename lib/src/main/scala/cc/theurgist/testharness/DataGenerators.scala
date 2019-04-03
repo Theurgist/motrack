@@ -6,6 +6,7 @@ import cc.theurgist.model.security.{User, UserId}
 import cc.theurgist.model._
 import cc.theurgist.security.PasswordValidation
 
+import scala.language.postfixOps
 import scala.util.Random
 
 /**

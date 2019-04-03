@@ -38,7 +38,7 @@ class TransactionDAOTest extends WordSpec with BeforeAndAfterEach with Matchers 
       val balance = dao.calcBalance(a1.id)
       val outcome = tx1.map(t => t.amount).sum
       val income = tx2.map(t => t.amount * t.conversionRate).sum
-      balance shouldBe(-outcome + income)
+      balance shouldBe(income - outcome)
     }
   }
 

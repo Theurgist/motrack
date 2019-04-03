@@ -1,5 +1,5 @@
 package cc.theurgist.config
-import com.typesafe.config.Config
+import com.typesafe.config.{Config, ConfigException}
 
 /**
   * Configuration branch wrapper
@@ -45,5 +45,15 @@ class ConfigBranch(protected val c: Config, val path: String) {
       c.getAnyRef(path).asInstanceOf[T]
     else
       null.asInstanceOf[T]
+
+  /**
+    * Read configuration key as instance of T
+    *
+    * @param path path relative to this configuration branch
+    * @tparam T desired result type
+    * @return key value
+    * @throws ConfigException on missing key
+    */
+  def read[T](path: String): T = c.getAnyRef(path).asInstanceOf[T]
 
 }

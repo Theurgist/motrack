@@ -3,6 +3,8 @@ package cc.theurgist.model
 import java.time.LocalDateTime
 
 import cc.theurgist.model.security.UserId
+import io.circe.{Decoder, Encoder}
+import io.circe.generic.extras.semiauto.{deriveUnwrappedDecoder, deriveUnwrappedEncoder}
 
 case class Transaction
 (
@@ -18,4 +20,7 @@ case class Transaction
 class TransactionId(val id: Long) extends AnyVal
 object TransactionId {
   val none: TransactionId = new TransactionId(0L)
+
+  implicit val encoder: Encoder[TransactionId] = deriveUnwrappedEncoder
+  implicit val decoder: Decoder[TransactionId] = deriveUnwrappedDecoder
 }

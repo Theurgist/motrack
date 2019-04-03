@@ -4,12 +4,15 @@ name := "jfx-client"
 fork := true
 mainClass in (Compile, run) := Some("cc.theurgist.Client")
 
-val versions = Map(
-  "typesafe-config" -> "1.3.3",
-  "logback"         -> "1.3.0-alpha4",
-  "scala-logging"   -> "3.9.2",
-  "scalafx"         -> "11-R16",
-)
+val versions = new {
+  val `typesafe-config` = "1.3.3"
+  val logback = "1.3.0-alpha4"
+  val `scala-logging` = "3.9.2"
+
+  val scalafx = "11-R16"
+  val `akka-http` = "10.1.8"
+}
+
 
 // Add JavaFX dependencies
 libraryDependencies ++= {
@@ -25,11 +28,11 @@ libraryDependencies ++= {
 }
 
 libraryDependencies ++= Seq(
-  "org.scalafx"                %% "scalafx"             % versions("scalafx"),
+  "org.scalafx"                %% "scalafx"             % versions.scalafx,
   "org.scalafx"                %% "scalafxml-core-sfx8" % "0.4",
-  "com.typesafe"               % "config"               % versions("typesafe-config"),
-  "com.typesafe.scala-logging" %% "scala-logging"       % versions("scala-logging"),
-  "ch.qos.logback"             % "logback-classic"      % versions("logback"),
+  "com.typesafe"               % "config"               % versions.`typesafe-config`,
+  "com.typesafe.scala-logging" %% "scala-logging"       % versions.`scala-logging`,
+  "ch.qos.logback"             % "logback-classic"      % versions.logback,
   // Test suites dependencies
   "org.scalatest"  %% "scalatest"   % "3.0.5"  % "test",
   "org.scalacheck" %% "scalacheck"  % "1.13.4" % "test",
@@ -38,7 +41,7 @@ libraryDependencies ++= Seq(
 
 dependencyOverrides ++= Seq(
   "org.slf4j"   % "slf4j-api" % "1.8.0-beta1",
-  "org.scalafx" %% "scalafx"  % versions("scalafx"),
+  "org.scalafx" %% "scalafx"  % versions.scalafx,
 )
 
 // Needed for ScalaFX
