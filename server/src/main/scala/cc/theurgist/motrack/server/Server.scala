@@ -9,7 +9,7 @@ import cats.effect.{ExitCode, IO, IOApp}
 import cc.theurgist.motrack.server.config.SrvConfig
 import cc.theurgist.motrack.server.database.{Db, InmemTcpServer}
 import cc.theurgist.motrack.server.migration.Migrator
-import cc.theurgist.motrack.server.routes.Root
+import cc.theurgist.motrack.server.routes.ServerRootRoute
 import com.typesafe.scalalogging.StrictLogging
 
 import scala.concurrent.ExecutionContextExecutor
@@ -28,7 +28,7 @@ object Server extends IOApp with StrictLogging {
     for {
       _ <- {
         logger.info("Motrack server has been started")
-        IO.fromFuture(IO(Http().bindAndHandle(new Root()(), SrvConfig.ip, SrvConfig.port)))
+        IO.fromFuture(IO(Http().bindAndHandle(new ServerRootRoute()(), SrvConfig.ip, SrvConfig.port)))
       }
     } yield ExitCode.Success
   }

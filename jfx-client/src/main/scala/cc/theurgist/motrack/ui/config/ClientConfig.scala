@@ -1,9 +1,9 @@
-package cc.theurgist.motrack.server.config
+package cc.theurgist.motrack.ui.config
 
 import cc.theurgist.motrack.lib.config.ApplicationConfig
 
-object SrvConfig {
-  private val c = ApplicationConfig.branch("server")
+object ClientConfig {
+  private val c = ApplicationConfig.branch("client")
 
   val ip: String = c.read("ip")
   val port: Int = c.read("port")

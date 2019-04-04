@@ -25,7 +25,7 @@ libraryDependencies ++= {
 
   Seq(
     "com.typesafe" % "config" % versions.`typesafe-config`,
-    "com.typesafe.scala-logging" %% "scala-logging"    % versions.`scala-logging`,
+    "com.typesafe.scala-logging" %% "scala-logging" % versions.`scala-logging`,
     "ch.qos.logback" % "logback-classic" % versions.logback,
 
     "org.flywaydb" % "flyway-core" % versions.flyway,

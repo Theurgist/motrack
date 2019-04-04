@@ -1,33 +1,28 @@
 package cc.theurgist.motrack.ui
 
+import cats.effect.{ExitCode, IO, IOApp}
 import com.typesafe.scalalogging.StrictLogging
-import scalafx.application.JFXApp
-import scalafxml.core.{FXMLView, NoDependencyResolver}
-import javafx.{scene => jfxs}
-import scalafx.Includes._
-import scalafx.application.JFXApp.PrimaryStage
-import scalafx.scene.Scene
-import scalafx.scene.paint.Color.LightGreen
+import akka.actor.ActorSystem
+import akka.stream.{ActorMaterializer, Materializer}
 
-object Client extends JFXApp with StrictLogging {
+import scala.concurrent.ExecutionContextExecutor
+
+object Client extends IOApp with StrictLogging {
+
+  implicit val system: ActorSystem                        = ActorSystem("Mo2")
+  implicit val materializer: Materializer                 = ActorMaterializer()
+  implicit val executionContext: ExecutionContextExecutor = system.dispatcher
+
+
   Thread.currentThread().setName("JFX")
   logger.info("Motrack client has been started")
 
+  override def run(args: List[String]): IO[ExitCode] = {
+//    for {
+//      _ <- UiApp.stage
+//    } yield ExitCode.Success
 
-  val fxml: jfxs.Parent = FXMLView(getClass.getResource("/jfx/main.fxml"), NoDependencyResolver)
-
-
-  stage = new PrimaryStage {
-    title = "Motrack client!"
-
-    minWidth = 400
-    minHeight = 300
-
-    scene = new Scene {
-      fill = LightGreen
-      root = fxml
-    }
+    ???
   }
 
-  logger.info("JavaFX scene constructed")
 }

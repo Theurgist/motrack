@@ -11,6 +11,12 @@ val versions = new {
 
   val scalafx = "11-R16"
   val `akka-http` = "10.1.8"
+  val cats = "1.6.0"
+  val `cats-effect` = "1.1.0"
+
+  val scalatest = "3.2.0-SNAP10"
+  val scalacheck = "1.14.0"
+  val mockito = "2.24.0"
 }
 
 
@@ -28,20 +34,28 @@ libraryDependencies ++= {
 }
 
 libraryDependencies ++= Seq(
-  "org.scalafx"                %% "scalafx"             % versions.scalafx,
-  "org.scalafx"                %% "scalafxml-core-sfx8" % "0.4",
-  "com.typesafe"               % "config"               % versions.`typesafe-config`,
-  "com.typesafe.scala-logging" %% "scala-logging"       % versions.`scala-logging`,
-  "ch.qos.logback"             % "logback-classic"      % versions.logback,
+  "org.scalafx" %% "scalafx" % versions.scalafx,
+  "org.scalafx" %% "scalafxml-core-sfx8" % "0.4",
+
+  "com.typesafe" % "config" % versions.`typesafe-config`,
+  "com.typesafe.scala-logging" %% "scala-logging" % versions.`scala-logging`,
+  "ch.qos.logback" % "logback-classic" % versions.logback,
+
+  "com.typesafe.akka" %% "akka-http" % versions.`akka-http`,
+  "de.heikoseeberger" %% "akka-http-circe" % "1.25.2",
+
+  "org.typelevel" %% "cats-core" % versions.cats,
+  "org.typelevel" %% "cats-effect" % versions.`cats-effect`,
+
   // Test suites dependencies
-  "org.scalatest"  %% "scalatest"   % "3.0.5"  % "test",
-  "org.scalacheck" %% "scalacheck"  % "1.13.4" % "test",
-  "org.mockito"    % "mockito-core" % "1.9.5"  % "test",
+  "org.scalatest" %% "scalatest" % versions.scalatest % "test",
+  "org.scalacheck" %% "scalacheck" % versions.scalacheck % "test",
+  "org.mockito" % "mockito-core" % versions.mockito % "test",
 )
 
 dependencyOverrides ++= Seq(
-  "org.slf4j"   % "slf4j-api" % "1.8.0-beta1",
-  "org.scalafx" %% "scalafx"  % versions.scalafx,
+  "org.slf4j" % "slf4j-api" % "1.8.0-beta1",
+  "org.scalafx" %% "scalafx" % versions.scalafx,
 )
 
 // Needed for ScalaFX
