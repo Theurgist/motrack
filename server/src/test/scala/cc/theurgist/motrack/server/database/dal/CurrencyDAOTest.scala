@@ -1,7 +1,7 @@
 package cc.theurgist.motrack.server.database.dal
 
 import cc.theurgist.motrack.server.database.Db
-import cc.theurgist.motrack.lib.model.{Currency, CurrencyId}
+import cc.theurgist.motrack.lib.model.currency.{Currency, CurrencyId}
 import cc.theurgist.motrack.server.testharness.InmemDbSetup
 import org.scalatest.{BeforeAndAfterEach, Matchers, WordSpec}
 

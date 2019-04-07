@@ -2,25 +2,22 @@ package cc.theurgist.motrack.server.routes
 
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
-import cc.theurgist.motrack.server.routes.info.Info
+import cc.theurgist.motrack.server.routes.info.InfoRoute
 
 class ServerRootRoute {
   def apply(): Route =
-    get {
-      path("") {
-        complete("Requested to Hello")
-      } ~ pathPrefix("user") {
-        new Users()()
-      } ~ pathPrefix("info") {
-        new Info()()
-      } ~ pathPrefix("zha") {
-        path(IntNumber) {id =>
-          complete(s"ZHHHA №$id")
-        }
-      }
-    } ~ post {
-      path("") {
-        complete("Posted for Hello")
+    path("") {
+      complete("Requested for Hello")
+    } ~ pathPrefix("user") {
+      new UsersRoute()()
+    } ~ pathPrefix("info") {
+      new InfoRoute()()
+    } ~ pathPrefix("account") {
+      new AccountsRoot()()
+    } ~ pathPrefix("zha") {
+      path(IntNumber) { id =>
+        complete(s"ZHHHA №$id")
       }
     }
+
 }

@@ -19,6 +19,7 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-core" % versions.circe,
   "io.circe" %% "circe-generic" % versions.circe,
   "io.circe" %% "circe-generic-extras" % versions.circe,
+  "io.circe" %% "circe-java8" % versions.circe,
 
   // Test suites dependencies
   "org.scalatest" %% "scalatest" % versions.scalatest % "test",

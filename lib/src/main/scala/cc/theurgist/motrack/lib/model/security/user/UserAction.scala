@@ -1,4 +1,4 @@
-package cc.theurgist.motrack.lib.model.security
+package cc.theurgist.motrack.lib.model.security.user
 
 import java.time.LocalDateTime
 

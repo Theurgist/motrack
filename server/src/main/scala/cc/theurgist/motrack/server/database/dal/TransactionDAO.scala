@@ -1,7 +1,8 @@
 package cc.theurgist.motrack.server.database.dal
 
+import cc.theurgist.motrack.lib.model.account.AccountId
 import cc.theurgist.motrack.server.database.Db.InmemContext
-import cc.theurgist.motrack.lib.model.{AccountId, Transaction, TransactionId}
+import cc.theurgist.motrack.lib.model.transaction.{Transaction, TransactionId}
 import com.typesafe.scalalogging.StrictLogging
 
 class TransactionDAO(context: InmemContext) extends BaseCRUD[Transaction](context) with StrictLogging {

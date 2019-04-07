@@ -6,7 +6,7 @@ import akka.http.scaladsl.server.Route
 import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport._
 import io.circe.generic.auto._
 
-class Info {
+class InfoRoute {
   def apply(): Route =
     get {
       path("status") {

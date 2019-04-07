@@ -1,7 +1,7 @@
 package cc.theurgist.motrack.server.database.dal
 
 import cc.theurgist.motrack.server.database.Db.InmemContext
-import cc.theurgist.motrack.lib.model.security.{User, UserId}
+import cc.theurgist.motrack.lib.model.security.user.{User, UserId}
 import com.typesafe.scalalogging.StrictLogging
 
 class UserDAO(context: InmemContext) extends BaseCRUD[User](context) with StrictLogging {

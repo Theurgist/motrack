@@ -1,6 +1,6 @@
 package cc.theurgist.motrack.server.database
 
-import cc.theurgist.motrack.lib.model.AccountType
+import cc.theurgist.motrack.lib.model.account.AccountType
 import io.getquill.MappedEncoding
 
 object QuillEncoders {

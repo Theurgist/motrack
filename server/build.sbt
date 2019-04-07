@@ -35,6 +35,8 @@ libraryDependencies ++= {
     "com.h2database" % "h2" % versions.h2,
 
     "com.typesafe.akka" %% "akka-http" % versions.`akka-http`,
+    "com.softwaremill.akka-http-session" %% "core" % "0.5.6",
+    "com.softwaremill.akka-http-session" %% "jwt" % "0.5.6",
     //"com.typesafe.akka" %% "akka-stream" % versions.`akka-stream`,
     "de.heikoseeberger" %% "akka-http-circe" % "1.25.2",
     "io.circe" %% "circe-core" % versions.circe,

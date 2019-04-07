@@ -1,7 +1,7 @@
 package cc.theurgist.motrack.server.database.dal
 
 import cc.theurgist.motrack.server.database.Db.InmemContext
-import cc.theurgist.motrack.lib.model.{Account, AccountId}
+import cc.theurgist.motrack.lib.model.account.{Account, AccountId}
 import com.typesafe.scalalogging.StrictLogging
 import cc.theurgist.motrack.server.database.QuillEncoders.{decodeAccountType, encodeAccountType}
 

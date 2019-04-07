@@ -1,7 +1,7 @@
 package cc.theurgist.motrack.server.database.dal
 
 import cc.theurgist.motrack.server.database.Db.InmemContext
-import cc.theurgist.motrack.lib.model.{Currency, CurrencyId}
+import cc.theurgist.motrack.lib.model.currency.{Currency, CurrencyId}
 import com.typesafe.scalalogging.StrictLogging
 
 class CurrencyDAO(context: InmemContext) extends BaseCRUD[Currency](context) with StrictLogging {

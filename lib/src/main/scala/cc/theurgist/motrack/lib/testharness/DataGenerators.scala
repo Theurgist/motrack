@@ -2,8 +2,10 @@ package cc.theurgist.motrack.lib.testharness
 
 import java.time.{LocalDateTime, ZoneOffset}
 
-import cc.theurgist.motrack.lib.model.security.{User, UserId}
-import cc.theurgist.motrack.lib.model._
+import cc.theurgist.motrack.lib.model.account.{Account, AccountId, AccountType}
+import cc.theurgist.motrack.lib.model.currency.{Currency, CurrencyId}
+import cc.theurgist.motrack.lib.model.security.user.{User, UserId}
+import cc.theurgist.motrack.lib.model.transaction.{Transaction, TransactionId}
 import cc.theurgist.motrack.lib.security.PasswordValidation
 
 import scala.language.postfixOps
