@@ -1,9 +1,9 @@
 package cc.theurgist.motrack.ui
 
-import cats.effect.{ExitCode, IO, IOApp}
-import com.typesafe.scalalogging.StrictLogging
 import akka.actor.ActorSystem
 import akka.stream.{ActorMaterializer, Materializer}
+import cats.effect.{ExitCode, IO, IOApp}
+import com.typesafe.scalalogging.StrictLogging
 
 import scala.concurrent.ExecutionContextExecutor
 
@@ -18,11 +18,9 @@ object Client extends IOApp with StrictLogging {
   logger.info("Motrack client has been started")
 
   override def run(args: List[String]): IO[ExitCode] = {
-//    for {
-//      _ <- UiApp.stage
-//    } yield ExitCode.Success
-
-    ???
+    for {
+      commandActor <- IO(system.actorOf(CommandActor.props()), "CMD")
+    } yield ExitCode.Success
   }
 
 }

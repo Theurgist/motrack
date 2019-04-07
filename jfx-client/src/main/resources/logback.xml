@@ -13,7 +13,7 @@
         <immediateFlush>true</immediateFlush>
 
         <encoder>
-            <pattern>🕑 %d{HH:mm:ss.SSS/zzz} 📶 %lvlclrz(%-5level) 🔌 %-10.10t 🍵 %-3L:%-30.30c{1.} 🗎 %lvlclrz(%m%n)</pattern>
+            <pattern>🕑%d{HH:mm:ss.SSS} 📶%lvlclrz(%.-1level) 🔌 %10.-10t..%2.2t 🍵%-3L:%-20.20c{1.} ℹ %2.18X{akkaSource} 🗎 %lvlclrz(%m%n)</pattern>
             <outputPatternAsHeader>true</outputPatternAsHeader>
         </encoder>
 
