@@ -19,7 +19,7 @@ object Server extends IOApp with StrictLogging {
   implicit val system: ActorSystem                        = ActorSystem("Mo2")
   implicit val materializer: Materializer                 = ActorMaterializer()
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
-  SessionSerializers.LongToStringSessionSerializer
+  //SessionSerializers.LongToStringSessionSerializer
 
   val conn: Connection = InmemTcpServer.getInmemConnection.get
   new Migrator(Db.inmemDs.get).migrate(true)
@@ -30,7 +30,7 @@ object Server extends IOApp with StrictLogging {
     for {
       _ <- {
         logger.info(s"Motrack server has been started at ${SrvConfig.ip}:${SrvConfig.port}")
-        IO.fromFuture(IO(Http().bindAndHandle(new ServerRootRoute()(), SrvConfig.ip, SrvConfig.port)))
+        IO.fromFuture(IO(Http().bindAndHandle(new ServerRootRoute().r, SrvConfig.ip, SrvConfig.port)))
       }
     } yield ExitCode.Success
   }

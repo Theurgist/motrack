@@ -12,4 +12,13 @@ case class User(
     name: String,
     password: EncryptedPassword,
     salt: PasswordSalt
+) extends WithId[UserId] {
+  def safePart: SafeUser = SafeUser(id, login, name)
+}
+
+case class SafeUser
+(
+  id: UserId,
+  login: String,
+  name: String,
 ) extends WithId[UserId]

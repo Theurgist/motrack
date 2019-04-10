@@ -8,6 +8,7 @@ object SrvConfig {
   val ip: String = c.read("ip")
   val port: Int = c.read("port")
   val protocolVersion: String = c.read("protocolVersion")
+  val secret: String = c.read("secret")
 }
 
 

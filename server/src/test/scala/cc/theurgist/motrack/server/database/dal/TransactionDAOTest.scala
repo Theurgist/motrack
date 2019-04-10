@@ -7,9 +7,9 @@ import cc.theurgist.motrack.server.testharness.InmemDbSetup
 import org.scalatest.{BeforeAndAfterEach, Matchers, WordSpec}
 
 class TransactionDAOTest extends WordSpec with BeforeAndAfterEach with Matchers with InmemDbSetup {
-  val ctx: InmemContext = Db.getInmemCtx.get
+  implicit val ctx: InmemContext = Db.getInmemCtx.get
   val dao = new TransactionDAO(ctx)
-  val udao = new UserDAO(ctx)
+  val udao = new UserDAO
   val cdao = new CurrencyDAO(ctx)
   val adao = new AccountDAO(ctx)
 

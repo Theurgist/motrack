@@ -7,6 +7,7 @@ create table currencies
     COUNTRY   varchar(100),
     IS_CRYPTO boolean
 );
+
 create table users
 (
     ID       serial        not null primary key,
@@ -15,25 +16,34 @@ create table users
     PASSWORD varchar(1000) not null,
     SALT     varchar(1000) not null
 );
+
+create table sessions
+(
+    id               bigserial                not null primary key,
+    user_id          int                      not null references users (ID),
+    created_at       timestamp with time zone not null,
+    last_activity_at timestamp with time zone not null
+);
+
 create table accounts
 (
-    ID          bigserial    not null primary key,
-    OWNER_ID    int          not null references users (ID),
-    CURRENCY_ID int          not null references currencies (ID),
-    NAME        varchar(100) not null,
-    ACC_TYPE    smallint     not null,
-    CREATED_AT  timestamp    not null
+    ID          bigserial                not null primary key,
+    OWNER_ID    int                      not null references users (ID),
+    CURRENCY_ID int                      not null references currencies (ID),
+    NAME        varchar(100)             not null,
+    ACC_TYPE    smallint                 not null,
+    CREATED_AT  timestamp with time zone not null
 );
 
 create table transactions
 (
-    ID              bigserial        not null primary key,
-    actor           int              not null references users (ID),
-    at              timestamp        not null,
+    ID              bigserial                not null primary key,
+    actor           int                      not null references users (ID),
+    at              timestamp with time zone not null,
     source          bigint references accounts (ID),
     destination     bigint references accounts (ID),
-    conversion_rate double precision not null,
-    amount          double precision not null
+    conversion_rate double precision         not null,
+    amount          double precision         not null
 );
 
 create unique index currencies_idx
@@ -48,6 +58,11 @@ create unique index users_idx
 create unique index users_login_x
     on users (LOGIN);
 
+create unique index sessions_idx
+    on sessions (id);
+create unique index sessions_users_idx
+    on sessions (user_id);
+
 create unique index accounts_idx
     on accounts (ID);
 
@@ -58,7 +73,8 @@ create index transactions_at_x
 
 
 
-INSERT INTO Users(ID, LOGIN, NAME, PASSWORD, SALT) VALUES (1, 'admin', 'admin', '', '');
+INSERT INTO Users(ID, LOGIN, NAME, PASSWORD, SALT)
+VALUES (1, 'admin', 'admin', '', '');
 
 --      Currency("rur", "Russian Ruble", "\u20BD", Option("Russian Federation"), isCrypto = false),
 --      Currency("usd", "United States Dollar", "$", Option("United States of America"), isCrypto = false),

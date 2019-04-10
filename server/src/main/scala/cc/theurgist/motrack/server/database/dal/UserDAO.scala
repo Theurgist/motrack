@@ -4,7 +4,7 @@ import cc.theurgist.motrack.server.database.Db.InmemContext
 import cc.theurgist.motrack.lib.model.security.user.{User, UserId}
 import com.typesafe.scalalogging.StrictLogging
 
-class UserDAO(context: InmemContext) extends BaseCRUD[User](context) with StrictLogging {
+class UserDAO(implicit context: InmemContext) extends BaseCRUD[User](context) with StrictLogging {
 
   import ctx._
   private val users = quote(querySchema[User]("users"))
