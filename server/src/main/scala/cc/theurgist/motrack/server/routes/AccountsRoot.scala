@@ -10,10 +10,10 @@ import cc.theurgist.motrack.server.database.dal.AccountDAO
 import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport._
 import io.circe.generic.auto._
 
-class AccountsRoot {
+class AccountsRoot extends RouteBranch {
   private val accounts = new AccountDAO(Db.getInmemCtx.get)
 
-  def apply(): Route =
+  def route: Route =
     get {
       path(IntNumber) { id =>
         accounts.find(new AccountId(id)) match {

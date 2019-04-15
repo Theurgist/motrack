@@ -13,13 +13,13 @@ class ServerRootRoute(implicit ec: ExecutionContextExecutor) {
       complete("Requested for Hello")
     } ~ pathPrefix("api") {
       pathPrefix("security") {
-        new SecurityRoute().r
+        new SecurityRoute
       } ~ pathPrefix("user") {
-        new UsersRoute().r
+        new UsersRoute
       } ~ pathPrefix("info") {
-        new InfoRoute()()
+        new InfoRoute
       } ~ pathPrefix("account") {
-        new AccountsRoot()()
+        new AccountsRoot
       } ~ pathPrefix("zha") {
         path(IntNumber) { id =>
           complete(s"ZHHHA №$id")

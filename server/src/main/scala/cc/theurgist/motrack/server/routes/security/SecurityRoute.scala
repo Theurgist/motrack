@@ -9,6 +9,7 @@ import cc.theurgist.motrack.server.config.SrvConfig
 import cc.theurgist.motrack.server.database.Db
 import cc.theurgist.motrack.server.database.Db.InmemContext
 import cc.theurgist.motrack.server.database.dal.{SessionDAO, UserDAO}
+import cc.theurgist.motrack.server.routes.RouteBranch
 import com.softwaremill.session.CsrfDirectives._
 import com.softwaremill.session.CsrfOptions._
 import com.softwaremill.session.SessionDirectives._
@@ -20,7 +21,7 @@ import io.circe.generic.auto._
 
 import scala.concurrent.ExecutionContextExecutor
 
-class SecurityRoute(implicit ec: ExecutionContextExecutor) extends StrictLogging {
+class SecurityRoute(implicit ec: ExecutionContextExecutor) extends RouteBranch with StrictLogging {
   private val (ux, sx) = (new UserDAO, new SessionDAO)
   private val scfg     = SessionConfig.default(SrvConfig.secret)
 
@@ -28,7 +29,7 @@ class SecurityRoute(implicit ec: ExecutionContextExecutor) extends StrictLogging
   implicit val sessionManager: SessionManager[Long]                   = new SessionManager[Long](scfg)
   implicit val refreshTokenStorage: InMemoryRefreshTokenStorage[Long] = (msg: String) => logger.info(s"SEC: $msg")
 
-  def r: Route =
+  def route: Route =
     path("do-login") {
       post {
         entity(as[LoginData]) { ld =>
