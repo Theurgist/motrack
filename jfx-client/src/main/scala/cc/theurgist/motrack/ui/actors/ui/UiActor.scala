@@ -1,7 +1,9 @@
-package cc.theurgist.motrack.ui
+package cc.theurgist.motrack.ui.actors.ui
 
-import akka.actor.{Actor, ActorRef}
+import akka.actor.Actor
 import akka.event.Logging
+import akka.http.scaladsl.Http
+import cc.theurgist.motrack.ui.ui.UiApp
 
 class UiActor extends Actor {
   private val log = Logging(context.system, this)

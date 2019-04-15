@@ -14,6 +14,7 @@ val versions = new {
   val `akka-http` = "10.1.8"
   val cats = "1.6.0"
   val `cats-effect` = "1.1.0"
+  val circe = "0.11.1"
 
   val scalatest = "3.2.0-SNAP10"
   val scalacheck = "1.14.0"
@@ -43,9 +44,12 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % versions.logback,
 
   "com.typesafe.akka" %% "akka-http" % versions.`akka-http`,
-  "de.heikoseeberger" %% "akka-http-circe" % "1.25.2",
   "com.typesafe.akka" %% "akka-actor" % versions.akka,
   "com.typesafe.akka" %% "akka-slf4j" % versions.akka,
+  "de.heikoseeberger" %% "akka-http-circe" % "1.25.2",
+  "io.circe" %% "circe-core" % versions.circe,
+  "io.circe" %% "circe-generic" % versions.circe,
+  "io.circe" %% "circe-generic-extras" % versions.circe,
 
   "org.typelevel" %% "cats-core" % versions.cats,
   "org.typelevel" %% "cats-effect" % versions.`cats-effect`,

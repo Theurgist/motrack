@@ -2,6 +2,7 @@ package cc.theurgist.motrack.server.routes.info
 
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
+import cc.theurgist.motrack.lib.dto.ServerStatus
 import cc.theurgist.motrack.server.routes.RouteBranch
 import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport._
 import io.circe.generic.auto._

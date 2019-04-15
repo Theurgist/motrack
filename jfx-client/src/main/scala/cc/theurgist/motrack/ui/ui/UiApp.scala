@@ -1,4 +1,4 @@
-package cc.theurgist.motrack.ui
+package cc.theurgist.motrack.ui.ui
 
 import com.typesafe.scalalogging.StrictLogging
 import scalafx.application.JFXApp

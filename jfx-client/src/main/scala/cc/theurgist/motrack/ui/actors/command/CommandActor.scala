@@ -1,8 +1,9 @@
-package cc.theurgist.motrack.ui
+package cc.theurgist.motrack.ui.actors.command
 
-import akka.actor.{Actor, ActorRef, Props}
+import akka.actor.{Actor, ActorRef, PoisonPill, Props}
 import akka.event.Logging
-import cc.theurgist.motrack.ui.CommandActor.{Exit, UpdateStatus}
+import cc.theurgist.motrack.ui.actors.network.NetworkActor
+import cc.theurgist.motrack.ui.actors.ui.UiActor
 
 class CommandActor extends Actor {
   private val log = Logging(context.system, this)
@@ -14,9 +15,14 @@ class CommandActor extends Actor {
 
 
   override def receive: Receive = {
-    case UpdateStatus =>
+    case UpdateServerStatus =>
+      log.info("Pinging..")
+      networkActor ! _
 
-    case Exit => log.info("Exiting application")
+    case Exit =>
+      log.info("Exiting application")
+      self ! PoisonPill
+
     case wrongMsg => log.error(s"got unrecognized message: $wrongMsg")
   }
 }
@@ -24,6 +30,4 @@ class CommandActor extends Actor {
 object CommandActor {
   def props(): Props = Props(new CommandActor)
 
-  case object Exit
-  case class UpdateStatus()
 }

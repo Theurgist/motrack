@@ -3,6 +3,7 @@ package cc.theurgist.motrack.ui
 import akka.actor.ActorSystem
 import akka.stream.{ActorMaterializer, Materializer}
 import cats.effect.{ExitCode, IO, IOApp}
+import cc.theurgist.motrack.ui.actors.command.CommandActor
 import com.typesafe.scalalogging.StrictLogging
 
 import scala.concurrent.ExecutionContextExecutor
