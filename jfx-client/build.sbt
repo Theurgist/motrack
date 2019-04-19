@@ -9,6 +9,7 @@ val versions = new {
   val logback = "1.3.0-alpha4"
   val `scala-logging` = "3.9.2"
 
+  val javafx = "11.0.1"
   val scalafx = "11-R16"
   val akka = "2.5.22"
   val `akka-http` = "10.1.8"
@@ -21,23 +22,31 @@ val versions = new {
   val mockito = "2.24.0"
 }
 
-
-// Add JavaFX dependencies
-libraryDependencies ++= {
-  lazy val javaFXModules = Seq("base", "controls", "fxml", "graphics", "media", "swing", "web")
-  // Determine OS version of JavaFX binaries
-  lazy val osName = System.getProperty("os.name") match {
-    case n if n.startsWith("Linux")   => "linux"
-    case n if n.startsWith("Mac")     => "mac"
-    case n if n.startsWith("Windows") => "win"
-    case _                            => throw new Exception("Unknown platform!")
-  }
-  javaFXModules.map(m => "org.openjfx" % s"javafx-$m" % "11" classifier osName)
+lazy val osName = System.getProperty("os.name") match {
+  case n if n.startsWith("Linux")   => "linux"
+  case n if n.startsWith("Mac")     => "mac"
+  case n if n.startsWith("Windows") => "win"
+  case _                            => throw new Exception("Unknown platform!")
 }
+// Add JavaFX dependencies
+//libraryDependencies ++= {
+//  lazy val javaFXModules = Seq("base", "controls", "fxml", "graphics", "media", "swing", "web")
+//  // Determine OS version of JavaFX binaries
+
+//  javaFXModules.map(m => "org.openjfx" % s"javafx-$m" % "11.0.1" classifier osName)
+//}
 
 libraryDependencies ++= Seq(
   "org.scalafx" %% "scalafx" % versions.scalafx,
   "org.scalafx" %% "scalafxml-core-sfx8" % "0.4",
+
+  "org.openjfx" % "javafx-base" % versions.javafx classifier osName,
+  "org.openjfx" % "javafx-controls" % versions.javafx classifier osName,
+  "org.openjfx" % "javafx-fxml" % versions.javafx classifier osName,
+  "org.openjfx" % "javafx-graphics" % versions.javafx classifier osName,
+  "org.openjfx" % "javafx-media" % versions.javafx classifier osName,
+  "org.openjfx" % "javafx-swing" % versions.javafx classifier osName,
+  "org.openjfx" % "javafx-web" % versions.javafx classifier osName,
 
   "com.typesafe" % "config" % versions.`typesafe-config`,
   "com.typesafe.scala-logging" %% "scala-logging" % versions.`scala-logging`,
@@ -63,6 +72,18 @@ libraryDependencies ++= Seq(
 dependencyOverrides ++= Seq(
   "org.slf4j" % "slf4j-api" % "1.8.0-beta1",
   "org.scalafx" %% "scalafx" % versions.scalafx,
+  "org.openjfx" % "javafx-base" % versions.javafx classifier osName,
+  "org.openjfx" % "javafx-controls" % versions.javafx classifier osName,
+  "org.openjfx" % "javafx-fxml" % versions.javafx classifier osName,
+  "org.openjfx" % "javafx-graphics" % versions.javafx classifier osName,
+  "org.openjfx" % "javafx-media" % versions.javafx classifier osName,
+  "org.openjfx" % "javafx-swing" % versions.javafx classifier osName,
+  "org.openjfx" % "javafx-web" % versions.javafx classifier osName,
+)
+
+excludeDependencies ++= Seq(
+  // commons-logging is replaced by jcl-over-slf4j
+  ExclusionRule("commons-logging", "commons-logging")
 )
 
 // Needed for ScalaFX

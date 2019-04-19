@@ -19,15 +19,15 @@ class CommandActor(implicit materializer: Materializer) extends Actor {
   private val requester = new Requester
 
   override def receive: Receive = LoggingReceive {
-    case 'listActors =>
-      context.actorSelection("/user/*") ! Identify()
-
-    case path: ActorPath =>
-      context.actorSelection(path / "*") ! Identify()
-
-    case ActorIdentity(_, Some(ref)) =>
-      log.info("Got actor " + ref.path.toString)
-      self ! ref.path
+//    case 'listActors =>
+//      context.actorSelection("/user/*") ! Identify()
+//
+//    case path: ActorPath =>
+//      context.actorSelection(path / "*") ! Identify()
+//
+//    case ActorIdentity(_, Some(ref)) =>
+//      log.info("Got actor " + ref.path.toString)
+//      self ! ref.path
 
 
     case m: UpdateServerStatus =>

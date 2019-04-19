@@ -1,4 +1,4 @@
-package cc.theurgist.motrack.ui.ui
+package cc.theurgist.motrack.ui.gui
 
 import com.typesafe.scalalogging.StrictLogging
 import scalafx.application.JFXApp
@@ -9,12 +9,13 @@ import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.Scene
 import scalafx.scene.paint.Color.LightGreen
 
-object UiApp extends JFXApp with StrictLogging {
+class UiApp extends JFXApp with StrictLogging {
   Thread.currentThread().setName("JFX-ui")
   logger.info("Motrack UI has been started")
 
 
-  val fxml: jfxs.Parent = FXMLView(getClass.getResource("/jfx/main.fxml"), NoDependencyResolver)
+  val fxmlRoot: jfxs.Parent = FXMLView(getClass.getResource("/jfx/main.fxml"), NoDependencyResolver)
+  val fxmlSSLabel: jfxs.Parent = FXMLView(getClass.getResource("/jfx/controls/serverStatusLabel.fxml"), NoDependencyResolver)
 
 
   stage = new PrimaryStage {
@@ -25,7 +26,7 @@ object UiApp extends JFXApp with StrictLogging {
 
     scene = new Scene {
       fill = LightGreen
-      root = fxml
+      root = fxmlRoot
     }
   }
 

@@ -5,7 +5,7 @@ import akka.stream.{ActorMaterializer, Materializer}
 import cats.effect.{ExitCode, IO, IOApp, Timer}
 import cc.theurgist.motrack.ui.actors.command.CommandInterface
 import cc.theurgist.motrack.ui.actors.gui.GuiInterface
-import cc.theurgist.motrack.ui.ui.UiApp
+import cc.theurgist.motrack.ui.gui.UiApp
 import com.typesafe.scalalogging.StrictLogging
 
 import scala.concurrent.Future
@@ -29,7 +29,7 @@ object Client extends IOApp with StrictLogging {
       commandIface                <- CommandInterface.init("CMD")
       guiIface                    <- GuiInterface.init("GUI", commandIface, Timer[IO])
       _                           <- IO(commandIface.updateServerStatus(guiIface.actor))
-      gui                         <- IO(Future { UiApp.main(Array()) }(sys.dispatcher))
+      gui                         <- IO(Future { new UiApp().main(Array()) }(sys.dispatcher))
 
     } yield ExitCode.Success
   }
