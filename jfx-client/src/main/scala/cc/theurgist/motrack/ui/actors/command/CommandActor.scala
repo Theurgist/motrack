@@ -1,7 +1,7 @@
 package cc.theurgist.motrack.ui.actors.command
 
-import akka.actor.{Actor, ActorRef, ActorSystem, PoisonPill, Props}
-import akka.event.Logging
+import akka.actor.{Actor, ActorIdentity, ActorPath, ActorRef, ActorSystem, Identify, PoisonPill, Props}
+import akka.event.{Logging, LoggingReceive}
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.{ActorMaterializer, Materializer}
 import cc.theurgist.motrack.lib.dto.ServerStatus
@@ -13,13 +13,23 @@ import io.circe.generic.auto._
 
 import scala.util.Success
 
-class CommandActor extends Actor {
+class CommandActor(implicit materializer: Materializer) extends Actor {
   private val log                         = Logging(context.system, this)
-  implicit val materializer: Materializer = ActorMaterializer()
 
   private val requester = new Requester
 
-  override def receive: Receive = {
+  override def receive: Receive = LoggingReceive {
+    case 'listActors =>
+      context.actorSelection("/user/*") ! Identify()
+
+    case path: ActorPath =>
+      context.actorSelection(path / "*") ! Identify()
+
+    case ActorIdentity(_, Some(ref)) =>
+      log.info("Got actor " + ref.path.toString)
+      self ! ref.path
+
+
     case m: UpdateServerStatus =>
       log.info("Pinging..")
       requester.reqForSelf("info/status", m)
@@ -48,8 +58,5 @@ class CommandActor extends Actor {
 }
 
 object CommandActor {
-  def create(name: String)(implicit system: ActorSystem): ActorRef =
-    system.actorOf(Props(new CommandActor), name = name)
-
-  def props: Props = Props[GuiActor]
+  def props(implicit m: Materializer): Props = Props(new CommandActor())
 }

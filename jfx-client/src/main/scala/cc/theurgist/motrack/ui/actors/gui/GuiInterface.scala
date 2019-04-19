@@ -8,8 +8,8 @@ import com.typesafe.scalalogging.StrictLogging
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-class GuiInterface private (actor: ActorRef) extends StrictLogging {
-  logger.info(s"UiInterface initialized")
+class GuiInterface private (val actor: ActorRef) extends StrictLogging {
+  logger.trace(s"UiInterface's actor: $actor")
 
   def closeApp(): Unit = actor ! "close"
 
@@ -17,8 +17,8 @@ class GuiInterface private (actor: ActorRef) extends StrictLogging {
 
 object GuiInterface {
 
-  def init(name: String, commandInterface: CommandInterface, timer: Timer[IO])(
-      implicit system: ActorSystem, cs: ContextShift[IO]): IO[GuiInterface] = {
+  def init(name: String, commandInterface: CommandInterface, timer: Timer[IO])(implicit system: ActorSystem,
+                                                                               cs: ContextShift[IO]): IO[GuiInterface] = {
 
     def ping(uiActor: ActorRef, no: Long = 1): IO[Nothing] =
       for {
