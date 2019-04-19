@@ -6,10 +6,13 @@ val versions = new {
   val h2 = "1.4.197"
   val quill = "3.1.0"
   val logback = "1.3.0-alpha4"
+  val `slf4j-api` = "1.8.0-beta1"
   val `scala-logging` = "3.9.2"
   val hikari = "3.3.1"
   val `akka-http` = "10.1.8"
   val `akka-stream` = "2.5.21"
+  val `akka-http-session` = "0.5.6"
+  val `akka-http-circe` = "1.25.2"
   val cats = "1.6.0"
   val `cats-effect` = "1.1.0"
   val circe = "0.11.1"
@@ -24,10 +27,6 @@ scalacOptions += "-Ypartial-unification"
 libraryDependencies ++= {
 
   Seq(
-    "com.typesafe" % "config" % versions.`typesafe-config`,
-    "com.typesafe.scala-logging" %% "scala-logging" % versions.`scala-logging`,
-    "ch.qos.logback" % "logback-classic" % versions.logback,
-
     "org.flywaydb" % "flyway-core" % versions.flyway,
     "io.getquill" %% "quill-sql" % versions.quill,
     "io.getquill" %% "quill-jdbc" % versions.quill,
@@ -35,13 +34,9 @@ libraryDependencies ++= {
     "com.h2database" % "h2" % versions.h2,
 
     "com.typesafe.akka" %% "akka-http" % versions.`akka-http`,
-    "com.softwaremill.akka-http-session" %% "core" % "0.5.6",
-    "com.softwaremill.akka-http-session" %% "jwt" % "0.5.6",
-    //"com.typesafe.akka" %% "akka-stream" % versions.`akka-stream`,
-    "de.heikoseeberger" %% "akka-http-circe" % "1.25.2",
-    "io.circe" %% "circe-core" % versions.circe,
-    "io.circe" %% "circe-generic" % versions.circe,
-    "io.circe" %% "circe-generic-extras" % versions.circe,
+    "com.softwaremill.akka-http-session" %% "core" % versions.`akka-http-session`,
+    "com.softwaremill.akka-http-session" %% "jwt" % versions.`akka-http-session`,
+    "de.heikoseeberger" %% "akka-http-circe" % versions.`akka-http-circe`,
 
     "org.typelevel" %% "cats-core" % versions.cats,
     "org.typelevel" %% "cats-effect" % versions.`cats-effect`,
@@ -55,7 +50,17 @@ libraryDependencies ++= {
 }
 
 dependencyOverrides ++= Seq(
-  "org.slf4j"                  % "slf4j-api"      % "1.8.0-beta1",
-  "com.typesafe.scala-logging" %% "scala-logging" % versions.`scala-logging`
+  "org.typelevel" %% "cats-core" % versions.cats,
+  "com.typesafe.akka" %% "akka-http" % versions.`akka-http`,
+  "org.slf4j" % "slf4j-api" % versions.`slf4j-api`,
+  "com.typesafe.scala-logging" %% "scala-logging" % versions.`scala-logging`,
 )
 //addSbtPlugin("io.github.davidmweber" % "flyway-sbt" % "5.2.0")
+
+
+assemblyMergeStrategy in assembly := {
+  case "module-info.class" => MergeStrategy.discard
+  case x =>
+    val oldStrategy = (assemblyMergeStrategy in assembly).value
+    oldStrategy(x)
+}
