@@ -29,7 +29,7 @@ object Client extends IOApp with StrictLogging {
       commandIface                <- CommandInterface.init("CMD")
       guiIface                    <- GuiInterface.init("GUI", commandIface, Timer[IO])
       _                           <- IO(commandIface.updateServerStatus())
-      gui                         <- IO(Future { new UiApp(commandIface).main(Array()) }(sys.dispatcher))
+      //_                           <- IO(Future { gui.main(Array()) }(sys.dispatcher))
 
     } yield ExitCode.Success
   }

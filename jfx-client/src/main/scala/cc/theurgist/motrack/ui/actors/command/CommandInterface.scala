@@ -14,7 +14,7 @@ import com.typesafe.scalalogging.StrictLogging
   * @param owner actor which will receive command execution results
   */
 class CommandInterface private (actor: ActorRef)(implicit owner: ActorRef) extends StrictLogging {
-  logger.trace(s"CommandInterface's actor: $actor")
+  logger.info(s"CommandInterface for actor: $actor with owner: $owner")
 
   /**
     * Let another actor have it's own copy of this interface
@@ -22,7 +22,13 @@ class CommandInterface private (actor: ActorRef)(implicit owner: ActorRef) exten
   def lend(forOwner: ActorRef): CommandInterface = new CommandInterface(actor)(forOwner)
 
   def updateServerStatus(): Unit = {
-    actor ! UpdateServerStatus
+    actor ! UpdateServerStatus()
+  }
+
+  def exit(): Unit = {
+    logger.info("Sending PoisonPills")
+    owner ! PoisonPill
+    actor ! PoisonPill
   }
 }
 

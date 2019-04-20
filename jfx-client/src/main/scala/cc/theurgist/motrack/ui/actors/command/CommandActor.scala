@@ -16,7 +16,7 @@ import scala.util.Success
 class CommandActor(implicit materializer: Materializer) extends Actor {
   private val log                         = Logging(context.system, this)
 
-  private val requester = new Requester
+  private val requester = new Requester(context)
 
   override def receive: Receive = LoggingReceive {
 //    case 'listActors =>
@@ -30,21 +30,24 @@ class CommandActor(implicit materializer: Materializer) extends Actor {
 //      self ! ref.path
 
 
-    case UpdateServerStatus() =>
+    case m: UpdateServerStatus =>
       log.info("Pinging..")
-      requester.reqForSelf("info/status", _)
+      val s = sender()
+      requester.reqForSelf("info/status", m)
+      sender()
 
     case Exit =>
       log.info("Exiting application")
       self ! PoisonPill
 
-    case CommandHttpResponse(cmd, r) =>
+    case CommandHttpResponse(cmd, r, i) =>
       cmd match {
         case UpdateServerStatus() =>
           Unmarshal(r.entity).to[ServerStatus].value match {
             case Some(Success(status)) =>
+              val s = sender()
               log.info(s"PING RECV: $status")
-              sender() ! status
+              i ! status
             case e =>
               log.info(s"PING ERR: $e")
           }
@@ -54,7 +57,7 @@ class CommandActor(implicit materializer: Materializer) extends Actor {
       }
 
     case wrongMsg =>
-      log.error(s"CMD got unrecognized message: $wrongMsg")
+      log.error(s"CMD got unrecognized message: $wrongMsg; ${wrongMsg.getClass}")
   }
 
 }

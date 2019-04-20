@@ -11,11 +11,11 @@ import scala.concurrent.{ExecutionContextExecutor, Future}
 /**
   * Allows actor to send http requests and route an answer to itself or other actor
   *
-  * @param ac ActorContext of owning actor sender
+  * @param actorContext ActorContext of owning actor for initializations
   */
-class Requester(implicit ac: ActorContext) {
-  private val http                                                = Http(ac.system)
-  private implicit val executionContext: ExecutionContextExecutor = ac.dispatcher
+class Requester(actorContext: ActorContext) {
+  private val http                                                = Http(actorContext.system)
+  private implicit val executionContext: ExecutionContextExecutor = actorContext.dispatcher
   import akka.pattern.pipe
 
   /**
@@ -35,8 +35,9 @@ class Requester(implicit ac: ActorContext) {
     * @param cmdOnCallback returning command
     * @return
     */
-  def reqForSelf(path: String, cmdOnCallback: Command): Future[CommandHttpResponse] =
+  def reqForSelf(path: String, cmdOnCallback: Command)(implicit ac: ActorContext): Future[CommandHttpResponse] = {
     reqFor(path, cmdOnCallback, ac.self)
+  }
 
   /**
     * Request and reroute answer to another actor
@@ -46,9 +47,11 @@ class Requester(implicit ac: ActorContext) {
     * @param recipient receiver actor
     * @return
     */
-  def reqFor(path: String, cmdOnCallback: Command, recipient: ActorRef): Future[CommandHttpResponse] =
-    srvreq(path).map(r => CommandHttpResponse(cmdOnCallback, r)).pipeTo(recipient)(ac.self)
+  def reqFor(path: String, cmdOnCallback: Command, recipient: ActorRef)(implicit ac: ActorContext): Future[CommandHttpResponse] = {
+    val sender = ac.sender()
+    srvreq(path).map(r => CommandHttpResponse(cmdOnCallback, r, sender)).pipeTo(recipient)(ac.self)
+  }
 
 }
 
-case class CommandHttpResponse(initial: Command, hr: HttpResponse)
+case class CommandHttpResponse(initial: Command, hr: HttpResponse, initiator: ActorRef)

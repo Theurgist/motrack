@@ -8,16 +8,24 @@ import scalafx.scene.layout.HBox
 import scalafxml.core.macros.sfxml
 
 @sfxml
-class MainWindow
+class FxMainWindow
 (
     ci: CommandInterface,
     btnTest: Button,
     statusBar: HBox
-) extends StrictLogging {
+) extends MainWindowActions with StrictLogging {
   logger.info("awakens: MainWindow")
 
   def btnTestClick(event: MouseEvent): Unit = {
     btnTest.setText("CLICKIN")
     ci.updateServerStatus()
+  }
+
+  def updateServerStatus(): Unit = {
+    println("UPDAT")
+  }
+
+  def exit(): Unit = {
+    ci.exit()
   }
 }
