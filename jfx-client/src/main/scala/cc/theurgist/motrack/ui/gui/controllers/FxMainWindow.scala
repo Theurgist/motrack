@@ -4,7 +4,7 @@ import cc.theurgist.motrack.ui.actors.command.CommandInterface
 import com.typesafe.scalalogging.StrictLogging
 import scalafx.scene.control.Button
 import scalafx.scene.input.MouseEvent
-import scalafx.scene.layout.HBox
+import scalafx.scene.layout.{HBox, Pane}
 import scalafxml.core.macros.sfxml
 
 @sfxml
@@ -12,7 +12,8 @@ class FxMainWindow
 (
     ci: CommandInterface,
     btnTest: Button,
-    statusBar: HBox
+    statusBar: HBox,
+    ssLabel: Pane,
 ) extends MainWindowActions with StrictLogging {
   logger.info("awakens: MainWindow")
 

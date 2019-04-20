@@ -22,28 +22,36 @@ class UiApp extends StrictLogging {
       Thread.currentThread().setName("JFX-ui")
       logger.info("Motrack UI has been started")
 
-      val (fxmlRoot: jfxs.Parent, rootController: MainWindowActions) = {
-        val loader = new FXMLLoader(getClass.getResource("/jfx/main.fxml"), new ExplicitDependencies(Map("ci" -> ci)))
-        loader.load()
-        (loader.getRoot[jfxs.Parent](), loader.getController[MainWindowActions]())
-      }
-      val fxmlSSLabel: jfxs.Parent =
-        FXMLView(getClass.getResource("/jfx/controls/serverStatusLabel.fxml"), NoDependencyResolver)
-      ctlrMain = Some(rootController)
-
-      stage = new PrimaryStage {
-        title = "Motrack client!"
-
-        minWidth = 400
-        minHeight = 300
-
-        scene = new Scene {
-          fill = LightGreen
-          root = fxmlRoot
+      try {
+        val (fxmlRoot: jfxs.Parent, rootController: MainWindowActions) = {
+          val loader = new FXMLLoader(
+            getClass.getResource("/jfx/main.fxml"),
+            new ExplicitDependencies(Map("ci" -> ci))
+          )
+          loader.load()
+          (loader.getRoot[jfxs.Parent](), loader.getController[MainWindowActions]())
         }
-      }
 
-      logger.info("JavaFX scene constructed")
+        ctlrMain = Some(rootController)
+
+        stage = new PrimaryStage {
+          title = "Motrack client!"
+
+          minWidth = 400
+          minHeight = 300
+
+          scene = new Scene {
+            fill = LightGreen
+            root = fxmlRoot
+          }
+        }
+
+        logger.info("JavaFX scene constructed")
+      } catch {
+        case e: Exception =>
+          logger.error(s"Fail: $e")
+          throw e
+      }
 
       override def stopApp(): Unit = {
         ci.exit()

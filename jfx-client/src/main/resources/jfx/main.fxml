@@ -64,6 +64,9 @@
             <Button fx:id="btnTest" layoutX="54.0" layoutY="96.0" mnemonicParsing="false" text="Button" />
       </children>
     </AnchorPane>
-      <HBox fx:id="statusBar" prefHeight="24.0" prefWidth="640.0" />
+      <HBox fx:id="statusBar" prefHeight="24.0" prefWidth="640.0">
+         <children>
+            <fx:include fx:id="ssLabel" source="controls/serverStatusLabel.fxml" />
+         </children></HBox>
   </children>
 </VBox>

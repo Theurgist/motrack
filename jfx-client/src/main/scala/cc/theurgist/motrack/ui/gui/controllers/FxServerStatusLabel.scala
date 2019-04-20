@@ -2,12 +2,13 @@ package cc.theurgist.motrack.ui.gui.controllers
 
 import cc.theurgist.motrack.lib.dto.{Green, Red, ServerStatus, Yellow}
 import com.typesafe.scalalogging.StrictLogging
-import javafx.scene.Parent
 import javafx.scene.paint.Color
 import scalafx.scene.control.{Label, Tooltip}
+import scalafx.scene.input.MouseEvent
 import scalafx.scene.shape.Circle
-import scalafxml.core.{FXMLView, NoDependencyResolver}
 import scalafxml.core.macros.sfxml
+
+import scala.util.Random
 
 @sfxml
 class FxServerStatusLabel(
@@ -15,8 +16,25 @@ class FxServerStatusLabel(
     val infoLabel: Label
 ) extends StrictLogging {
   logger.info("awakens: FxServerStatusLabel")
-  //val fxmlSSLabel: Parent = FXMLView(getClass.getResource("/jfx/controls/serverStatusLabel.fxml"), NoDependencyResolver)
 
+//  def load(): Parent = {
+//    val loader = new FXMLLoader(getClass.getResource("/jfx/controls/serverStatusLabel.fxml"), NoDependencyResolver)
+//    loader.setRoot(this)
+//    loader.setController(this)
+//
+//    try {
+//      loader.load()
+//    } catch {
+//      case e: IOException => logger.error(s"Can't load: $e")
+//    }
+//    val fxmlSSLabel: Parent =
+//      FXMLView(getClass.getResource("/jfx/controls/serverStatusLabel.fxml"), NoDependencyResolver)
+//    fxmlSSLabel
+//  }
+
+  def bulbClicked(e: MouseEvent): Unit = {
+    bulb.setFill(new Color(Random.nextDouble(), Random.nextDouble(), Random.nextDouble(), 1.0))
+  }
 
   def updateServerStatus(ss: ServerStatus): Unit = {
     bulb.setFill(ss.health match {

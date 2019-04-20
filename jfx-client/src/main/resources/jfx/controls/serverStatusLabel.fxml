@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.shape.Circle?>
@@ -9,9 +10,12 @@
    <children>
       <AnchorPane prefHeight="30.0" prefWidth="28.0">
          <children>
-            <Circle fx:id="bulb" fill="DODGERBLUE" layoutX="14.0" layoutY="16.0" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+            <Circle fx:id="bulb" fill="DODGERBLUE" layoutX="14.0" layoutY="16.0" onMouseClicked="#bulbClicked" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
          </children>
       </AnchorPane>
-      <Label fx:id="infoLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Server state" />
+      <Label fx:id="infoLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Server state">
+         <tooltip>
+            <Tooltip text="Azaza" />
+         </tooltip></Label>
    </children>
 </HBox>

@@ -22,6 +22,7 @@ object Client extends IOApp with StrictLogging {
   Thread.currentThread().setName("JFX")
   logger.info("Motrack client has been started")
 
+  //TODO Proper application kill supporting IO structure
   override def run(args: List[String]): IO[ExitCode] = {
     for {
       implicit0(sys: ActorSystem) <- system
