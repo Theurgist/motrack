@@ -30,9 +30,9 @@ class CommandActor(implicit materializer: Materializer) extends Actor {
 //      self ! ref.path
 
 
-    case m: UpdateServerStatus =>
+    case UpdateServerStatus() =>
       log.info("Pinging..")
-      requester.reqForSelf("info/status", m)
+      requester.reqForSelf("info/status", _)
 
     case Exit =>
       log.info("Exiting application")
@@ -40,19 +40,21 @@ class CommandActor(implicit materializer: Materializer) extends Actor {
 
     case CommandHttpResponse(cmd, r) =>
       cmd match {
-        case UpdateServerStatus(sender) =>
+        case UpdateServerStatus() =>
           Unmarshal(r.entity).to[ServerStatus].value match {
             case Some(Success(status)) =>
               log.info(s"PING RECV: $status")
-              sender ! status
+              sender() ! status
             case e =>
               log.info(s"PING ERR: $e")
           }
 
-        case unmatched => log.error(s"unmatched http response for command $cmd: $r")
+        case unmatched =>
+          log.error(s"unmatched http response for command $cmd: $r")
       }
 
-    case wrongMsg => log.error(s"got unrecognized message: $wrongMsg")
+    case wrongMsg =>
+      log.error(s"CMD got unrecognized message: $wrongMsg")
   }
 
 }

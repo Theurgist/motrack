@@ -1,6 +1,7 @@
 package cc.theurgist.motrack.ui.gui.controllers
 
 import cc.theurgist.motrack.lib.dto.{Green, Red, ServerStatus, Yellow}
+import com.typesafe.scalalogging.StrictLogging
 import javafx.scene.Parent
 import javafx.scene.paint.Color
 import scalafx.scene.control.{Label, Tooltip}
@@ -12,8 +13,8 @@ import scalafxml.core.macros.sfxml
 class FxServerStatusLabel(
     val bulb: Circle,
     val infoLabel: Label
-) {
-
+) extends StrictLogging {
+  logger.info("awakens: FxServerStatusLabel")
   //val fxmlSSLabel: Parent = FXMLView(getClass.getResource("/jfx/controls/serverStatusLabel.fxml"), NoDependencyResolver)
 
 

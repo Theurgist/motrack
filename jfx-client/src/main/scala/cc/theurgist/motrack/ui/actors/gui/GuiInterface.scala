@@ -20,17 +20,18 @@ object GuiInterface {
   def init(name: String, commandInterface: CommandInterface, timer: Timer[IO])(implicit system: ActorSystem,
                                                                                cs: ContextShift[IO]): IO[GuiInterface] = {
 
-    def ping(uiActor: ActorRef, no: Long = 1): IO[Nothing] =
+    def ping(uiActor: ActorRef, ci: CommandInterface,no: Long = 1): IO[Nothing] =
       for {
         _   <- IO(println(s"Ping №$no"))
         _   <- timer.sleep(3 seconds)
-        _   <- IO(commandInterface.updateServerStatus(uiActor))
-        res <- ping(uiActor, no + 1)
+        _   <- IO(ci.updateServerStatus())
+        res <- ping(uiActor, ci, no + 1)
       } yield res
 
     for {
       ref <- IO(system.actorOf(GuiActor.props, name))
-      _   <- ping(ref).start
+      ci <- IO(commandInterface.lend(ref))
+      _   <- ping(ref, ci).start
       res <- IO(new GuiInterface(ref))
     } yield res
   }
