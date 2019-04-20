@@ -22,7 +22,7 @@ class FxMainWindow
   }
 
   def updateServerStatus(): Unit = {
-    println("UPDAT")
+    println("UPDATED")
   }
 
   def exit(): Unit = {

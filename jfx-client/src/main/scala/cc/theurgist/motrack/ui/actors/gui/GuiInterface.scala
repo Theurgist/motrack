@@ -37,7 +37,7 @@ object GuiInterface {
       res <- IO(new GuiInterface(ref))
       ci  <- IO(commandInterface.lend(ref))
       _   <- IO(gui.run(ci)(system.dispatcher))
-      //_   <- ping(ref, ci).start
+      _   <- ping(ref, ci).start
     } yield res
   }
 }

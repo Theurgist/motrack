@@ -1,13 +1,12 @@
 package cc.theurgist.motrack.ui.actors.command
 
-import akka.actor.{Actor, ActorIdentity, ActorPath, ActorRef, ActorSystem, Identify, PoisonPill, Props}
+import akka.actor.{Actor, PoisonPill, Props}
 import akka.event.{Logging, LoggingReceive}
 import akka.http.scaladsl.unmarshalling.Unmarshal
-import akka.stream.{ActorMaterializer, Materializer}
+import akka.stream.Materializer
 import cc.theurgist.motrack.lib.dto.ServerStatus
-import cc.theurgist.motrack.ui.network.{CommandHttpResponse, Requester}
-import cc.theurgist.motrack.ui.actors.gui.GuiActor
 import cc.theurgist.motrack.ui.actors.{Exit, UpdateServerStatus}
+import cc.theurgist.motrack.ui.network.{CommandHttpResponse, Requester}
 import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport._
 import io.circe.generic.auto._
 
