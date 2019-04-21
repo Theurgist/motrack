@@ -10,27 +10,17 @@ import scalafxml.core.macros.sfxml
 
 import scala.util.Random
 
+trait ServerStatusLabelController {
+  def bulbClicked(e: MouseEvent): Unit
+  def updateServerStatus(ss: ServerStatus): Unit
+}
+
 @sfxml
-class FxServerStatusLabel(
+class FxServerStatusLabelController(
     val bulb: Circle,
     val infoLabel: Label
-) extends StrictLogging {
-  logger.info("awakens: FxServerStatusLabel")
-
-//  def load(): Parent = {
-//    val loader = new FXMLLoader(getClass.getResource("/jfx/controls/serverStatusLabel.fxml"), NoDependencyResolver)
-//    loader.setRoot(this)
-//    loader.setController(this)
-//
-//    try {
-//      loader.load()
-//    } catch {
-//      case e: IOException => logger.error(s"Can't load: $e")
-//    }
-//    val fxmlSSLabel: Parent =
-//      FXMLView(getClass.getResource("/jfx/controls/serverStatusLabel.fxml"), NoDependencyResolver)
-//    fxmlSSLabel
-//  }
+) extends ServerStatusLabelController with StrictLogging {
+  logger.trace("awakens: FxServerStatusLabel")
 
   def bulbClicked(e: MouseEvent): Unit = {
     bulb.setFill(new Color(Random.nextDouble(), Random.nextDouble(), Random.nextDouble(), 1.0))

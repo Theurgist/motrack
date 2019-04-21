@@ -2,6 +2,6 @@
 * `+`	Added
 * `-`	Deleted
 * `*`	Modified
-* `v`	Fixed 
+* `v`/`✓`	Fixed 
 * `>`	Moved, refactored
 * `@`	Working on feature

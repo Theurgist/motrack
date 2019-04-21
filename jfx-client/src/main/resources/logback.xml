@@ -70,5 +70,6 @@
     </root>
 
     <logger level="WARN" name="io.netty"/>
+    <logger level="INFO" name="cc.theurgist.motrack"/>
 
 </configuration>

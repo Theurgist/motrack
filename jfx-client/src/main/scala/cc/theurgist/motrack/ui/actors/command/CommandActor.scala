@@ -6,37 +6,31 @@ import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.Materializer
 import cc.theurgist.motrack.lib.dto.ServerStatus
 import cc.theurgist.motrack.ui.actors.{Exit, UpdateServerStatus}
-import cc.theurgist.motrack.ui.network.{CommandHttpResponse, Requester}
+import cc.theurgist.motrack.ui.network.AkkaHttpRequester
+import cc.theurgist.motrack.ui.network.AkkaHttpRequester.CommandHttpResponse
 import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport._
 import io.circe.generic.auto._
 
 import scala.util.Success
 
 class CommandActor(implicit materializer: Materializer) extends Actor {
-  private val log                         = Logging(context.system, this)
-
-  private val requester = new Requester(context)
+  private val log  = Logging(context.system, this)
+  private val http = new AkkaHttpRequester(context)
 
   override def receive: Receive = LoggingReceive {
-//    case 'listActors =>
-//      context.actorSelection("/user/*") ! Identify()
-//
-//    case path: ActorPath =>
-//      context.actorSelection(path / "*") ! Identify()
-//
-//    case ActorIdentity(_, Some(ref)) =>
-//      log.info("Got actor " + ref.path.toString)
-//      self ! ref.path
-
+    // Actor identification pipeline
+//    case 'listActors => context.actorSelection("/user/*") ! Identify()
+//    case path: ActorPath => context.actorSelection(path / "*") ! Identify()
+//    case ActorIdentity(_, Some(ref)) => { log.info("Got actor " + ref.path.toString); self ! ref.path }
 
     case m: UpdateServerStatus =>
-      log.info("Pinging..")
-      val s = sender()
-      requester.reqForSelf("info/status", m)
+      log.debug("Pinging..")
+      http.reqForSelf("info/status", m)
       sender()
 
     case Exit =>
       log.info("Exiting application")
+      context.system.terminate()
       self ! PoisonPill
 
     case CommandHttpResponse(cmd, r, i) =>
@@ -44,11 +38,9 @@ class CommandActor(implicit materializer: Materializer) extends Actor {
         case UpdateServerStatus() =>
           Unmarshal(r.entity).to[ServerStatus].value match {
             case Some(Success(status)) =>
-              val s = sender()
-              log.info(s"PING RECV: $status")
+              log.debug(s"PING RECV: $status")
               i ! status
-            case e =>
-              log.info(s"PING ERR: $e")
+            case e => log.warning(s"PING ERR: $e")
           }
 
         case unmatched =>

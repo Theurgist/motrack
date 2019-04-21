@@ -13,7 +13,7 @@
 
 <!--suppress ALL -->
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cc.theurgist.motrack.ui.gui.controllers.FxMainWindow">
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cc.theurgist.motrack.ui.gui.controllers.FxMainWindowController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -61,7 +61,7 @@
             <Font size="18.0" />
           </font>
         </Label>
-            <Button fx:id="btnTest" layoutX="54.0" layoutY="96.0" mnemonicParsing="false" text="Button" />
+            <Button fx:id="btnTest" layoutX="54.0" layoutY="96.0" mnemonicParsing="false" onMouseClicked="#btnTestClick" text="Button" />
       </children>
     </AnchorPane>
       <HBox fx:id="statusBar" prefHeight="24.0" prefWidth="640.0">

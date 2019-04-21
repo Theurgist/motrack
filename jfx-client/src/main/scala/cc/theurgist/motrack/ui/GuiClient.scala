@@ -5,32 +5,22 @@ import akka.stream.{ActorMaterializer, Materializer}
 import cats.effect.{ExitCode, IO, IOApp, Timer}
 import cc.theurgist.motrack.ui.actors.command.CommandInterface
 import cc.theurgist.motrack.ui.actors.gui.GuiInterface
-import cc.theurgist.motrack.ui.gui.UiApp
 import com.typesafe.scalalogging.StrictLogging
 
-import scala.concurrent.Future
+/**
+  * Starting point for Gui application
+  */
+object GuiClient extends IOApp with StrictLogging {
+  Thread.currentThread().setName("Client")
 
-object Client extends IOApp with StrictLogging {
-
-  def system: IO[ActorSystem] = IO(ActorSystem("Mo2"))
-
-  def runAll: IO[Unit] =
-    for {
-      r <- IO(println("gege"))
-    } yield r
-
-  Thread.currentThread().setName("JFX")
-  logger.info("Motrack client has been started")
-
-  //TODO Proper application kill supporting IO structure
   override def run(args: List[String]): IO[ExitCode] = {
     for {
-      implicit0(sys: ActorSystem) <- system
+      implicit0(sys: ActorSystem) <- IO(ActorSystem("Mo2"))
       implicit0(m: Materializer)  <- IO(ActorMaterializer())
       commandIface                <- CommandInterface.init("CMD")
       guiIface                    <- GuiInterface.init("GUI", commandIface, Timer[IO])
       _                           <- IO(commandIface.updateServerStatus())
-      //_                           <- IO(Future { gui.main(Array()) }(sys.dispatcher))
+      _                           <- IO(logger.info("Motrack client has been started"))
 
     } yield ExitCode.Success
   }
