@@ -42,8 +42,8 @@ create table transactions
     at              timestamp with time zone not null,
     source          bigint references accounts (ID),
     destination     bigint references accounts (ID),
-    conversion_rate double precision         not null,
-    amount          double precision         not null
+    conversion_rate decimal                  not null,
+    amount          decimal                  not null
 );
 
 create unique index currencies_idx
@@ -72,11 +72,26 @@ create index transactions_at_x
     on transactions (at);
 
 
+-- Base data
+INSERT INTO currencies(ID, CODE, NAME, UNICODE, COUNTRY, IS_CRYPTO)
+VALUES (1, 'rur', 'Russian Ruble', '\u20BD', 'Russian Federation', false),
+       (2, 'usd', 'United States Dollar', '$', 'United States of American', false),
+       (3, 'eur', 'Euro', '€', 'Europe', false),
+       (4, 'btc', 'Bitcoin', 'btc', null, true),
+       (5, 'eth', 'Etherium', 'eth', null, true);
 
 INSERT INTO Users(ID, LOGIN, NAME, PASSWORD, SALT)
-VALUES (1, 'admin', 'admin', '', '');
+VALUES (1, 'admin', 'admin', '123', '');
 
---      Currency("rur", "Russian Ruble", "\u20BD", Option("Russian Federation"), isCrypto = false),
---      Currency("usd", "United States Dollar", "$", Option("United States of America"), isCrypto = false),
---      Currency("eur", "Euro", "€", Option("Europe"), isCrypto = false),
--- INSERT INTO Circle (radius) VALUES (?)
+
+-- Temporary data for testing purposes
+INSERT INTO Users(ID, LOGIN, NAME, PASSWORD, SALT)
+VALUES (2, 'vasya', 'Vasya', '123', ''),
+       (3, 'petya', 'Petya', '123', '');
+
+INSERT into accounts(OWNER_ID, CURRENCY_ID, NAME, ACC_TYPE, CREATED_AT)
+VALUES (2, 1, 'Bank1 card', 1, CURRENT_TIME),
+       (2, 2, 'Bank2 card', 3, CURRENT_TIME),
+       (2, 4, 'Secret wallet', 4, CURRENT_TIME),
+       (3, 1, 'Cabal', 2, CURRENT_TIME),
+       (3, 1, 'Pocket money', 3, CURRENT_TIME);

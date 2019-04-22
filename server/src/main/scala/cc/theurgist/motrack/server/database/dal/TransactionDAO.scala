@@ -17,11 +17,11 @@ class TransactionDAO(context: InmemContext) extends BaseCRUD[Transaction](contex
     quote(liftQuery(ox).foreach(o => transactions.insert(o).returning(_.id)))
   }
 
-  def calcBalance(aid: AccountId): Double = {
+  def calcBalance(aid: AccountId): BigDecimal = {
     //ctx.run (byAccId(aid).map(t => t.amount * t.conversionRate).sum).getOrElse(0.0)
     val inbound = ctx.run (byAccIdInbound(aid).map(t => t.amount * t.conversionRate).sum)
     val outbound = ctx.run (byAccIdOutbound(aid).map(t => t.amount).sum)
-    inbound.getOrElse(0.0) - outbound.getOrElse(0.0)
+    inbound.getOrElse(BigDecimal(0)) - outbound.getOrElse(BigDecimal(0))
   }
 
   def delete(id: TransactionId): Long = ctx.run { byId(id).delete }

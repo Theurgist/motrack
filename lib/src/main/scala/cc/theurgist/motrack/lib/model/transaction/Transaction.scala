@@ -15,7 +15,7 @@ case class Transaction
     at: LocalDateTime,
     source: Option[AccountId],
     destination: Option[AccountId],
-    conversionRate: Double,
-    amount: Double
+    conversionRate: BigDecimal,
+    amount: BigDecimal
 ) extends WithId[TransactionId]
 

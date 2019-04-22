@@ -11,9 +11,9 @@ class CurrencyDAOTest extends WordSpec with BeforeAndAfterEach with Matchers wit
   "Currencies" should {
     "being inserted" in {
       val cs = List(
-        Currency(CurrencyId.none, "rur", "Russian Ruble", "\u20BD", Option("Russian Federation"), isCrypto = false),
-        Currency(CurrencyId.none, "usd", "United States Dollar", "$", Option("United States of America"), isCrypto = false),
-        Currency(CurrencyId.none, "eur", "Euro", "€", Option("Europe"), isCrypto = false),
+        Currency(CurrencyId.none, "C1", "NAME1", "\u20BD", Option("SOME"), isCrypto = false),
+        Currency(CurrencyId.none, "C2", "NAME2", "$", Option("COUNTRY"), isCrypto = false),
+        Currency(CurrencyId.none, "C3", "NAME3", "€", None, isCrypto = true),
       )
       val newId        = dao.insert(cs.head)
       val insertedHead = dao.findByCode(cs.head.code).head
