@@ -2,7 +2,7 @@
 master: [![Build Status](https://travis-ci.org/Theurgist/motrack.svg?branch=master)](https://travis-ci.org/Theurgist/motrack)
 develop: [![Build Status](https://travis-ci.org/Theurgist/motrack.svg?branch=develop)](https://travis-ci.org/Theurgist/motrack)
 
-##Application for budget retrospection
+## Application for budget retrospection
 This is a pet-project for fun and scala digging, 
 it is not usable as a real tool ATM.
 
