@@ -8,6 +8,7 @@
 
 
 ### SBT and JVM stuff
+*.jar
 target/
 project/boot/
 project/plugins/project/

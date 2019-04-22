@@ -2,4 +2,4 @@
 THIS_SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 cd ${THIS_SCRIPT_DIR}/..
 
-sbt assembly
+sbt clean assembly

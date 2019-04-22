@@ -6,7 +6,7 @@
     <conversionRule conversionWord="lvlclrz" converterClass="cc.theurgist.motrack.server.FineLogbackLevelColorizer" />
 
     <property name="LOGS_ROOT" value="logs" />
-    <property name="LOG_BASE_NAME" value="${project.build.finalName}" />
+    <property name="LOG_BASE_NAME" value="motrack-server" />
     <property name="LOG_BASE_EXTENSION" value="log" />
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">

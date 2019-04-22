@@ -64,3 +64,4 @@ assemblyMergeStrategy in assembly := {
     val oldStrategy = (assemblyMergeStrategy in assembly).value
     oldStrategy(x)
 }
+assemblyOutputPath in assembly := file(s"bin/server-${version.value}.jar")
