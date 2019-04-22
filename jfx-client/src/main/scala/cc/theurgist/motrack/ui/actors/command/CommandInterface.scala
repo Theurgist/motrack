@@ -10,23 +10,36 @@ import com.typesafe.scalalogging.StrictLogging
 /**
   * Main interaction interface
   *
-  * @param actor command actor
+  * @param commandActor command actor
   * @param owner actor which will receive command execution results
   */
-class CommandInterface private (actor: ActorRef)(implicit owner: ActorRef) extends StrictLogging {
-  logger.debug(s"CommandInterface for actor: $actor with owner: $owner")
+class CommandInterface private (commandActor: ActorRef)(implicit owner: ActorRef) extends StrictLogging {
+  logger.debug(s"CommandInterface for actor: $commandActor with owner: $owner")
 
   /**
     * Let another actor have it's own copy of this interface
     */
-  def lend(forOwner: ActorRef): CommandInterface = new CommandInterface(actor)(forOwner)
+  def lend(forOwner: ActorRef): CommandInterface = new CommandInterface(commandActor)(forOwner)
 
-  def updateServerStatus(): Unit = actor ! UpdateServerStatus()
+  def updateServerStatus(): Unit = commandActor ! UpdateServerStatus()
 
-  def exit(): Unit = actor ! Exit
+  def exit(): Unit = commandActor ! Exit
 }
 
+/**
+  * Command interface initialization entry point
+  */
 object CommandInterface {
+
+  /**
+    * Get a command interface
+    *
+    * @param name new actor's name
+    * @param owner action results receiving actor
+    * @param system actor system
+    * @param m actor materializer
+    * @return wrapped command interface instance
+    */
   def init(name: String, owner: ActorRef = ActorRef.noSender)(implicit system: ActorSystem,
                                                               m: Materializer): IO[CommandInterface] =
     for {

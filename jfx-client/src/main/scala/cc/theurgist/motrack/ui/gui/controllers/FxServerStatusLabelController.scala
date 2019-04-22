@@ -13,12 +13,14 @@ import scala.util.Random
 trait ServerStatusLabelController {
   def bulbClicked(e: MouseEvent): Unit
   def updateServerStatus(ss: ServerStatus): Unit
+  def updateErrorLabel(errorMsg: String): Unit
 }
 
 @sfxml
 class FxServerStatusLabelController(
     val bulb: Circle,
-    val infoLabel: Label
+    val infoLabel: Label,
+    val errorLabel: Label,
 ) extends ServerStatusLabelController with StrictLogging {
   logger.trace("awakens: FxServerStatusLabel")
 
@@ -36,5 +38,13 @@ class FxServerStatusLabelController(
     infoLabel.setTooltip(new Tooltip {
       text = s"Updated at ${ss.zonedTime}"
     }.delegate)
+  }
+
+  def updateErrorLabel(errorMsg: String): Unit = {
+    if (errorMsg.nonEmpty) {
+      errorLabel.text = errorMsg
+      errorLabel.visible = true
+    } else
+    errorLabel.visible = false
   }
 }

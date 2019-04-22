@@ -6,16 +6,21 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.shape.Circle?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="326.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cc.theurgist.motrack.ui.gui.controllers.FxServerStatusLabelController">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="599.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cc.theurgist.motrack.ui.gui.controllers.FxServerStatusLabelController">
    <children>
       <AnchorPane prefHeight="30.0" prefWidth="28.0">
          <children>
             <Circle fx:id="bulb" fill="DODGERBLUE" layoutX="14.0" layoutY="16.0" onMouseClicked="#bulbClicked" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
          </children>
       </AnchorPane>
-      <Label fx:id="infoLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Server state">
+      <Label fx:id="infoLabel" maxHeight="1.7976931348623157E308" maxWidth="200.0" minWidth="200.0" prefHeight="30.0" prefWidth="464.0" text="Server state">
          <tooltip>
             <Tooltip text="Azaza" />
          </tooltip></Label>
+      <Label fx:id="errorLabel" maxHeight="1.7976931348623157E308" maxWidth="300.0" text="No errors">
+         <tooltip>
+            <Tooltip text="Azaza" />
+         </tooltip>
+      </Label>
    </children>
 </HBox>

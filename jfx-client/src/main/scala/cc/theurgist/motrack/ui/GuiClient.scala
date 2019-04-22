@@ -18,7 +18,7 @@ object GuiClient extends IOApp with StrictLogging {
       implicit0(sys: ActorSystem) <- IO(ActorSystem("Mo2"))
       implicit0(m: Materializer)  <- IO(ActorMaterializer())
       commandIface                <- CommandInterface.init("CMD")
-      guiIface                    <- GuiInterface.init("GUI", commandIface, Timer[IO])
+      _                           <- GuiInterface.init("GUI", commandIface, Timer[IO])
       _                           <- IO(commandIface.updateServerStatus())
       _                           <- IO(logger.info("Motrack client has been started"))
 

@@ -2,11 +2,14 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -56,29 +59,59 @@
       </menus>
     </MenuBar>
       <fx:include fx:id="mainHeader" source="controls/mainHeader.fxml" />
-      <BorderPane VBox.vgrow="ALWAYS">
-         <center>
-          <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0">
-            <children>
-                  <Button fx:id="btnTest" layoutX="75.0" layoutY="52.0" mnemonicParsing="false" onMouseClicked="#btnTestClick" text="Check server" />
-            </children>
-          </AnchorPane>
-         </center>
-         <left>
-            <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-               <top>
-                  <Label text="Label" BorderPane.alignment="CENTER" />
-               </top>
-               <center>
-                  <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" prefWidth="200.0" BorderPane.alignment="CENTER">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-                    </content>
-                  </ScrollPane>
-               </center>
-            </BorderPane>
-         </left>
-      </BorderPane>
+      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+        <tabs>
+          <Tab text="Property">
+            <content>
+                  <BorderPane>
+                     <center>
+                        <BorderPane BorderPane.alignment="CENTER">
+                           <left>
+                              <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                 <top>
+                                    <Label text="Accounts" BorderPane.alignment="CENTER" />
+                                 </top>
+                                 <center>
+                                    <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                      <content>
+                                          <ListView fx:id="accountsList" maxHeight="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" />
+                                      </content>
+                                    </ScrollPane>
+                                 </center>
+                              </BorderPane>
+                           </left>
+                           <center>
+                              <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+                                <tabs>
+                                  <Tab text="Events">
+                                    <content>
+                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                             <children>
+                                                <Button fx:id="btnTest" layoutX="74.0" layoutY="215.0" mnemonicParsing="false" onMouseClicked="#btnTestClick" text="Check server" />
+                                             </children>
+                                          </AnchorPane>
+                                    </content>
+                                  </Tab>
+                                  <Tab text="Cumulative stats">
+                                    <content>
+                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                    </content>
+                                  </Tab>
+                                </tabs>
+                              </TabPane>
+                           </center>
+                        </BorderPane>
+                     </center>
+                  </BorderPane>
+            </content>
+          </Tab>
+          <Tab text="Situation">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
       <HBox fx:id="statusBar" prefHeight="24.0" prefWidth="640.0">
          <children>
             <fx:include fx:id="ssLabel" source="controls/serverStatusLabel.fxml" />
