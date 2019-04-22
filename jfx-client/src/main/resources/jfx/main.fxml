@@ -5,15 +5,16 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <!--suppress ALL -->
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cc.theurgist.motrack.ui.gui.controllers.FxMainWindowController">
+<VBox prefHeight="780.0" prefWidth="1073.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cc.theurgist.motrack.ui.gui.controllers.FxMainWindowController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -54,16 +55,30 @@
         </Menu>
       </menus>
     </MenuBar>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
-      <children>
-        <Label alignment="CENTER" layoutX="155.0" layoutY="177.0" style="&#10;" text="Drag components from Library here…" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false">
-          <font>
-            <Font size="18.0" />
-          </font>
-        </Label>
-            <Button fx:id="btnTest" layoutX="54.0" layoutY="96.0" mnemonicParsing="false" onMouseClicked="#btnTestClick" text="Button" />
-      </children>
-    </AnchorPane>
+      <fx:include fx:id="mainHeader" source="controls/mainHeader.fxml" />
+      <BorderPane VBox.vgrow="ALWAYS">
+         <center>
+          <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0">
+            <children>
+                  <Button fx:id="btnTest" layoutX="75.0" layoutY="52.0" mnemonicParsing="false" onMouseClicked="#btnTestClick" text="Check server" />
+            </children>
+          </AnchorPane>
+         </center>
+         <left>
+            <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <top>
+                  <Label text="Label" BorderPane.alignment="CENTER" />
+               </top>
+               <center>
+                  <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" prefWidth="200.0" BorderPane.alignment="CENTER">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                    </content>
+                  </ScrollPane>
+               </center>
+            </BorderPane>
+         </left>
+      </BorderPane>
       <HBox fx:id="statusBar" prefHeight="24.0" prefWidth="640.0">
          <children>
             <fx:include fx:id="ssLabel" source="controls/serverStatusLabel.fxml" />

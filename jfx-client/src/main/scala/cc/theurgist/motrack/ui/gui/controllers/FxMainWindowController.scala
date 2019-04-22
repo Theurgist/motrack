@@ -21,7 +21,8 @@ class FxMainWindowController
     ci: CommandInterface,
     btnTest: Button,
     statusBar: HBox,
-    @nested[FxServerStatusLabelController] ssLabelController: ServerStatusLabelController
+    @nested[FxServerStatusLabelController] ssLabelController: ServerStatusLabelController,
+    @nested[FxMainHeaderController] mainHeaderController: MainHeaderController
 ) extends MainWindowController with StrictLogging {
   logger.trace("awakens: MainWindow")
 
