@@ -2,22 +2,37 @@ package cc.theurgist.motrack.ui.actors.command
 
 import akka.actor.{Actor, PoisonPill, Props}
 import akka.event.{Logging, LoggingReceive}
-import akka.http.scaladsl.unmarshalling.Unmarshal
+import akka.http.scaladsl.model.HttpMethods._
+import akka.http.scaladsl.model.{HttpEntity, MediaTypes, RequestEntity, ResponseEntity}
+import akka.http.scaladsl.unmarshalling.{Unmarshal, Unmarshaller}
 import akka.stream.Materializer
 import cc.theurgist.motrack.lib.dto.ServerStatus
+import cc.theurgist.motrack.lib.model.security.session.SessionId
+import cc.theurgist.motrack.lib.model.security.user.SafeUser
 import cc.theurgist.motrack.ui.actors.{Exit, LoginAttempt, Terminate, UpdateServerStatus}
-import cc.theurgist.motrack.ui.network.AkkaHttpRequester
 import cc.theurgist.motrack.ui.network.AkkaHttpRequester.CommandHttpResponse
+import cc.theurgist.motrack.ui.network.{AkkaHttpRequester, Req}
 import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport._
+import io.circe.Json
 import io.circe.generic.auto._
+import io.circe.syntax._
 
-import scala.language.postfixOps
 import scala.concurrent.duration._
-import scala.util.Success
+import scala.language.{implicitConversions, postfixOps}
+import scala.util.{Success, Try}
+
+case class SessionedMessage[T](
+    user: SafeUser,
+    sessionId: SessionId,
+    data: T
+)
 
 class CommandActor(implicit materializer: Materializer) extends Actor {
-  private val log  = Logging(context.system, this)
-  private val http = new AkkaHttpRequester(context)
+  private val log                                = Logging(context.system, this)
+  private val http                               = new AkkaHttpRequester(context)
+  implicit def entity(json: Json): RequestEntity = HttpEntity(MediaTypes.`application/json`, json.toString())
+
+  private def decode[T](re: ResponseEntity)(implicit um: Unmarshaller[ResponseEntity, T]): Option[Try[T]] = Unmarshal(re).to[T].value
 
   override def receive: Receive = LoggingReceive {
     // Actor identification pipeline
@@ -25,29 +40,23 @@ class CommandActor(implicit materializer: Materializer) extends Actor {
 //    case path: ActorPath => context.actorSelection(path / "*") ! Identify()
 //    case ActorIdentity(_, Some(ref)) => { log.info("Got actor " + ref.path.toString); self ! ref.path }
 
-    case m: UpdateServerStatus =>
-      log.debug("Pinging..")
-      http.reqForSelf("info/status", m)
+    case m: UpdateServerStatus => http ! Req(GET, "info/status", m)
 
-    case LoginAttempt(data) =>
-    //http.reqForSelf("security/do-login", )
+    case la: LoginAttempt => http ! Req(POST, "security/do-login", la, la.data.asJson)
 
     case Exit =>
       log.info("Exiting application")
-      if (sender() != self)
-        sender() ! PoisonPill
+      if (sender() != self) sender() ! PoisonPill
       context.system.scheduler.scheduleOnce(1 seconds, self, Terminate)(context.dispatcher)
+    case Terminate => context.system.terminate()
 
-    case Terminate =>
-      context.system.terminate()
-
-    case CommandHttpResponse(cmd, r, i) =>
+    case CommandHttpResponse(cmd, r, initiator) =>
       cmd match {
         case UpdateServerStatus() =>
-          Unmarshal(r.entity).to[ServerStatus].value match {
+          decode[ServerStatus](r.entity) match {
             case Some(Success(status)) =>
               log.debug(s"PING RECV: $status")
-              i ! status
+              initiator ! status
             case e => log.warning(s"PING ERR: $e")
           }
 

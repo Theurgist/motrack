@@ -6,29 +6,20 @@ import akka.http.scaladsl.server.Route
 import cc.theurgist.motrack.lib.Timing
 import cc.theurgist.motrack.lib.model.security.session.{Session, SessionId}
 import cc.theurgist.motrack.lib.security.LoginData
-import cc.theurgist.motrack.server.config.SrvConfig
-import cc.theurgist.motrack.server.database.Db
-import cc.theurgist.motrack.server.database.Db.InmemContext
 import cc.theurgist.motrack.server.database.dal.{SessionDAO, UserDAO}
 import cc.theurgist.motrack.server.routes.RouteBranch
 import com.softwaremill.session.CsrfDirectives._
 import com.softwaremill.session.CsrfOptions._
 import com.softwaremill.session.SessionDirectives._
 import com.softwaremill.session.SessionOptions._
-import com.softwaremill.session.{InMemoryRefreshTokenStorage, SessionConfig, SessionManager}
 import com.typesafe.scalalogging.StrictLogging
 import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport._
 import io.circe.generic.auto._
 
 import scala.concurrent.ExecutionContextExecutor
 
-class SecurityRoute(implicit ec: ExecutionContextExecutor) extends RouteBranch with StrictLogging {
+class SecurityRoute(implicit val ec: ExecutionContextExecutor) extends RouteBranch with SessionProvider with StrictLogging {
   private val (ux, sx) = (new UserDAO, new SessionDAO)
-  private val scfg     = SessionConfig.default(SrvConfig.secret)
-
-  implicit val dbCtx: InmemContext                                    = Db.getInmemCtx.get
-  implicit val sessionManager: SessionManager[Long]                   = new SessionManager[Long](scfg)
-  implicit val refreshTokenStorage: InMemoryRefreshTokenStorage[Long] = (msg: String) => logger.info(s"SEC: $msg")
 
   def route: Route =
     path("do-login") {
@@ -38,7 +29,7 @@ class SecurityRoute(implicit ec: ExecutionContextExecutor) extends RouteBranch w
             case Some(u) =>
               val s   = Session(SessionId.none, u.id, Timing.now, Timing.now)
               val sid = sx.create(s)
-              setSession(refreshable, usingHeaders, sid.id) {
+              mySetSession(sid.id) {
                 setNewCsrfToken(checkHeader) { ctx =>
                   ctx.complete(sid.id)
                 }
@@ -50,8 +41,9 @@ class SecurityRoute(implicit ec: ExecutionContextExecutor) extends RouteBranch w
       }
     } ~ path("logoff") {
       post {
-        requiredSession(refreshable, usingHeaders) { s =>
-          invalidateSession(refreshable, usingHeaders) { ctx =>
+        myRequiredSession { s =>
+          myInvalidateSession { ctx =>
+            sx.delete(new SessionId(s))
             logger.info(s"Logging out $s")
             ctx.complete("ok")
           }

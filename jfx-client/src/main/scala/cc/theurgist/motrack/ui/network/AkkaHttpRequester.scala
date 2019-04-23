@@ -2,14 +2,14 @@ package cc.theurgist.motrack.ui.network
 
 import akka.actor.{ActorContext, ActorRef}
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.{HttpHeader, HttpMethod, HttpRequest, HttpResponse, RequestEntity}
+import akka.http.scaladsl.model._
+import akka.pattern.pipe
 import cc.theurgist.motrack.ui.actors.Command
 import cc.theurgist.motrack.ui.config.ClientConfig
-import akka.pattern.pipe
 import cc.theurgist.motrack.ui.network.AkkaHttpRequester.CommandHttpResponse
-import scala.collection.immutable.Seq
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
+import scala.language.{implicitConversions, postfixOps}
 
 object AkkaHttpRequester {
 
@@ -22,6 +22,14 @@ object AkkaHttpRequester {
     */
   case class CommandHttpResponse(initial: Command, hr: HttpResponse, initiator: ActorRef)
 }
+
+case class Req(
+    method: HttpMethod,
+    apiPath: String,
+    cmdOnCallback: Command,
+    entity: RequestEntity = HttpEntity.Empty,
+    headers: Seq[HttpHeader] = Seq[HttpHeader]()
+)
 
 /**
   * Allows actor to send http requests and route an answer to itself or other actor
@@ -42,14 +50,36 @@ class AkkaHttpRequester(actorContext: ActorContext) {
   def reqForSelf(path: String, cmdOnCallback: Command)(implicit ac: ActorContext): Future[CommandHttpResponse] = {
     reqFor(path, cmdOnCallback, ac.self)
   }
-  def reqForSelf(method: HttpMethod, apiPath: String, headers: Seq[HttpHeader], entity: RequestEntity, cmdOnCallback: Command)(
-      implicit ac: ActorContext): Future[CommandHttpResponse] = {
-    http.singleRequest(HttpRequest(
-      method,
-      ClientConfig.hostHttpPath + "/api/" + apiPath,
-      headers,
-    )).map(r => CommandHttpResponse(cmdOnCallback, r, ac.sender())).pipeTo(ac.self)(ac.self)
+  def reqForSelf(method: HttpMethod,
+                 apiPath: String,
+                 cmdOnCallback: Command,
+                 entity: RequestEntity = HttpEntity.Empty,
+                 headers: Seq[HttpHeader])(implicit ac: ActorContext): Future[CommandHttpResponse] = {
+    http
+      .singleRequest(
+        HttpRequest(
+          method,
+          ClientConfig.hostHttpPath + "/api/" + apiPath,
+          scala.collection.immutable.Seq(headers: _*),
+          entity
+        ))
+      .map(r => CommandHttpResponse(cmdOnCallback, r, ac.sender()))
+      .pipeTo(ac.self)(ac.self)
     reqFor(apiPath, cmdOnCallback, ac.self)
+  }
+
+  def !(r: Req)(implicit ac: ActorContext): Future[CommandHttpResponse] = {
+    val initiator = ac.sender()
+    http
+      .singleRequest(
+        HttpRequest(
+          r.method,
+          ClientConfig.hostHttpPath + "/api/" + r.apiPath,
+          scala.collection.immutable.Seq(r.headers: _*),
+          r.entity
+        ))
+      .map(response => CommandHttpResponse(r.cmdOnCallback, response, initiator))
+      .pipeTo(ac.self)(ac.self)
   }
 
   /**

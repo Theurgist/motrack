@@ -8,6 +8,7 @@ import cc.theurgist.motrack.server.routes.security.{SecurityRoute, UsersRoute}
 import scala.concurrent.ExecutionContextExecutor
 
 class ServerRootRoute(implicit ec: ExecutionContextExecutor) {
+
   def r: Route =
     path("") {
       complete("Requested for Hello")

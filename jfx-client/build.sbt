@@ -52,6 +52,11 @@ libraryDependencies ++= Seq(
   "org.typelevel" %% "cats-core" % versions.cats,
   "org.typelevel" %% "cats-effect" % versions.`cats-effect`,
 
+  "io.circe" %% "circe-core" % versions.circe,
+  "io.circe" %% "circe-generic" % versions.circe,
+  "io.circe" %% "circe-generic-extras" % versions.circe,
+  "io.circe" %% "circe-java8" % versions.circe,
+
   // Test suites dependencies
   "org.scalatest" %% "scalatest" % versions.scalatest % "test",
   "org.scalacheck" %% "scalacheck" % versions.scalacheck % "test",
