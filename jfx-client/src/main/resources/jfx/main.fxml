@@ -61,6 +61,15 @@
       <fx:include fx:id="mainHeader" source="controls/mainHeader.fxml" />
       <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
         <tabs>
+            <Tab fx:id="tabLogin" text="Login">
+               <content>
+                  <BorderPane>
+                     <center>
+                        <fx:include fx:id="loginPage" source="controls/loginPage.fxml" />
+                     </center>
+                  </BorderPane>
+               </content>
+            </Tab>
           <Tab text="Property">
             <content>
                   <BorderPane>

@@ -1,3 +1,3 @@
-package cc.theurgist.motrack.server.routes.security
+package cc.theurgist.motrack.lib.security
 
 case class LoginData(username: String, password: String)

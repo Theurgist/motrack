@@ -2,11 +2,12 @@ package cc.theurgist.motrack.ui.network
 
 import akka.actor.{ActorContext, ActorRef}
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
+import akka.http.scaladsl.model.{HttpHeader, HttpMethod, HttpRequest, HttpResponse, RequestEntity}
 import cc.theurgist.motrack.ui.actors.Command
 import cc.theurgist.motrack.ui.config.ClientConfig
 import akka.pattern.pipe
 import cc.theurgist.motrack.ui.network.AkkaHttpRequester.CommandHttpResponse
+import scala.collection.immutable.Seq
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
@@ -40,6 +41,15 @@ class AkkaHttpRequester(actorContext: ActorContext) {
     */
   def reqForSelf(path: String, cmdOnCallback: Command)(implicit ac: ActorContext): Future[CommandHttpResponse] = {
     reqFor(path, cmdOnCallback, ac.self)
+  }
+  def reqForSelf(method: HttpMethod, apiPath: String, headers: Seq[HttpHeader], entity: RequestEntity, cmdOnCallback: Command)(
+      implicit ac: ActorContext): Future[CommandHttpResponse] = {
+    http.singleRequest(HttpRequest(
+      method,
+      ClientConfig.hostHttpPath + "/api/" + apiPath,
+      headers,
+    )).map(r => CommandHttpResponse(cmdOnCallback, r, ac.sender())).pipeTo(ac.self)(ac.self)
+    reqFor(apiPath, cmdOnCallback, ac.self)
   }
 
   /**

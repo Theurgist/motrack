@@ -36,8 +36,11 @@ class FxMainWindowController(
     accountsList: ListView[Account],
     @nested[FxServerStatusLabelController] ssLabelController: ServerStatusLabelController,
     @nested[FxMainHeaderController] mainHeaderController: MainHeaderController,
+    @nested[FxLoginPageController] loginPageController: LoginPageController,
 ) extends MainWindowController with StrictLogging {
   logger.trace("awakens: MainWindow")
+
+  loginPageController.loginAction = (u: String, p: String) => () //ci.
 
   val accounts: mutable.MutableList[Account] =
     mutable.MutableList(Account(new AccountId(1), new UserId(3), new CurrencyId(3), "TTTR", BankAccount, Timing.now))

@@ -2,7 +2,7 @@ package cc.theurgist.motrack.ui.actors.command
 
 import akka.actor.{ActorRef, ActorSystem}
 import cats.effect.IO
-import cc.theurgist.motrack.ui.actors.{Exit, UpdateServerStatus}
+import cc.theurgist.motrack.ui.actors.{Exit, LoginAttempt, UpdateServerStatus}
 import akka.actor._
 import akka.stream.Materializer
 import com.typesafe.scalalogging.StrictLogging
@@ -21,6 +21,7 @@ class CommandInterface private (commandActor: ActorRef)(implicit owner: ActorRef
     */
   def lend(forOwner: ActorRef): CommandInterface = new CommandInterface(commandActor)(forOwner)
 
+  def login(username: String, password: String): Unit = ??? //commandActor ! LoginAttempt(username, password)
   def updateServerStatus(): Unit = commandActor ! UpdateServerStatus()
 
   def exit(): Unit = commandActor ! Exit

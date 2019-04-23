@@ -17,10 +17,10 @@ Here is an approximate list of applied technologies
     * h2 (postgresql soon)
     * flyway
 * UI
-    * Scalafx
+    * ScalaFx
     
 #### Build
-`sbt assembly` or `bin/build.sh` (need installed sbt)
+`sbt clean assembly` or `bin/build.sh` (need installed sbt)
 
 #### Execute
 After assembling project it's sufficient to:
