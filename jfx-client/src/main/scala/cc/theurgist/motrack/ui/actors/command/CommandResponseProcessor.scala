@@ -7,7 +7,8 @@ import akka.http.scaladsl.model.ResponseEntity
 import akka.http.scaladsl.unmarshalling.{Unmarshal, Unmarshaller}
 import akka.stream.Materializer
 import cc.theurgist.motrack.lib.dto.{Red, ServerStatus}
-import cc.theurgist.motrack.lib.messages.{LoginAttempt, LoginResult, ServersideError, UpdateServerStatus}
+import cc.theurgist.motrack.lib.messages._
+import cc.theurgist.motrack.lib.security.SecBundle
 import cc.theurgist.motrack.ui.network.AkkaHttpRequester.{ReqFailure, ReqResponse}
 import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport._
 import io.circe.generic.auto._
@@ -41,8 +42,25 @@ trait CommandResponseProcessor {
 
         case LoginAttempt(_) =>
           decode[LoginResult](r.entity) match {
-            case Some(Success(loginResult)) => initiator ! LoginResult(loginResult.r)
+            case Some(Success(loginResult)) =>
+              val osb = loginResult.r match {
+                case Right(pair) =>
+                  Some(
+                    SecBundle(
+                      pair._1,
+                      r.headers.find(_.name() == "Set-Authorization").map(_.value()).getOrElse(""),
+                      r.headers.find(_.name() == "Set-Refresh-Token").map(_.value()).getOrElse(""),
+                      r.headers.find(_.name() == "Set-Cookie").map(_.value()).getOrElse("")
+                    ))
+                case Left(_) =>
+                  None
+              }
+
+              initiator ! (osb, LoginResult(loginResult.r))
           }
+
+        case Logoff =>
+          initiator ! Logoff
 
         case _ =>
           val msg = s"Unmatched http response for command $cmd: $r"

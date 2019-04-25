@@ -5,6 +5,7 @@ import cc.theurgist.motrack.lib.dto.ServerStatus
 import cc.theurgist.motrack.lib.messages.{LoginResult, Logoff, ServersideError}
 import cc.theurgist.motrack.lib.model.security.session.SessionId
 import cc.theurgist.motrack.lib.model.security.user.SafeUser
+import cc.theurgist.motrack.lib.security.SecBundle
 import cc.theurgist.motrack.ui.gui.controllers.MainWindowController
 import scalafx.application.Platform
 
@@ -26,10 +27,10 @@ class GuiActor(controller: => Option[MainWindowController]) extends FSM[GuiState
   startWith(LoggedOff, Uninitialized(""))
 
   when(LoggedOff) {
-    case Event(LoginResult(r), _) => r match {
+    case Event((osb: Option[SecBundle], LoginResult(r)), _) => r match {
       case Right((sid, user)) =>
         guiExec(mw => {
-
+          mw.changeSec(osb)
           mw.gotoLoggedInEnv(user)
         })
         goto(LoggedIn).using(UserData(sid, user))
@@ -45,6 +46,7 @@ class GuiActor(controller: => Option[MainWindowController]) extends FSM[GuiState
   when(LoggedIn) {
     case Event(Logoff, d: UserData) =>
       guiExec(mw => {
+        mw.changeSec(None)
         mw.gotoLoggedOffEnv()
       })
       goto(LoggedOff).using(Uninitialized(d.user.login))

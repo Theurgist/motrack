@@ -11,7 +11,7 @@ import cc.theurgist.motrack.server.routes.security.{SecurityRoute, UsersRoute}
 import scala.concurrent.ExecutionContextExecutor
 
 class ServerRootRoute(implicit ec: ExecutionContextExecutor) {
-  def requestMethodAsInfo(req: HttpRequest): LogEntry = LogEntry(s"${req.method.name}: ${req.uri} {${req.entity}", Logging.InfoLevel)
+  def requestMethodAsInfo(req: HttpRequest): LogEntry = LogEntry(s"${req.method.name}: ${req.uri} {${req.entity}} [${req.headers}]", Logging.InfoLevel)
 
   def r: Route = DebuggingDirectives.logRequest(requestMethodAsInfo _) {
     path("") {

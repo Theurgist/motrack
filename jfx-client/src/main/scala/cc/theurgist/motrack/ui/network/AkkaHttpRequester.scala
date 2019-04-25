@@ -52,6 +52,7 @@ object AkkaHttpRequester {
     def pipeWithErr(recipient: ActorRef, initiator: ActorRef, cmd: Cmd)(implicit sender: ActorRef = Actor.noSender): Future[T] =
       future.andThen {
         case Success(r) =>
+          val rr = r
           recipient ! r
         case Failure(f) =>
           recipient ! ReqFailure(cmd, initiator, f) //Status.Failure(f)

@@ -1,17 +1,17 @@
 package cc.theurgist.motrack.ui.gui.controllers
 
-import cats.effect.IO
 import cc.theurgist.motrack.lib.Timing
 import cc.theurgist.motrack.lib.dto.ServerStatus
 import cc.theurgist.motrack.lib.model.account.{Account, AccountId, BankAccount}
 import cc.theurgist.motrack.lib.model.currency.CurrencyId
 import cc.theurgist.motrack.lib.model.security.user.{SafeUser, UserId}
+import cc.theurgist.motrack.lib.security.SecBundle
 import cc.theurgist.motrack.ui.actors.command.CommandInterface
 import com.typesafe.scalalogging.StrictLogging
 import scalafx.beans.value.ObservableValue
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.Cursor
-import scalafx.scene.control.{Button, ListCell, ListView, Tab, TabPane}
+import scalafx.scene.control._
 import scalafx.scene.input.MouseEvent
 import scalafx.scene.layout.{AnchorPane, HBox, VBox}
 import scalafx.scene.paint.Color
@@ -23,6 +23,7 @@ import scala.collection.mutable
 trait MainWindowController {
   def updateServerStatus(ss: ServerStatus): Unit
   def updateErrorLabel(errorMsg: String): Unit
+  def changeSec(newSb: Option[SecBundle]): Unit
 
   def gotoLoggedOffEnv(): Unit
   def gotoLoggedInEnv(user: SafeUser): Unit
@@ -38,7 +39,7 @@ trait MainWindowController {
 
 @sfxml
 class FxMainWindowController(
-    ci: CommandInterface,
+    var ci: CommandInterface, //TODO eliminate var
     mainHeader: AnchorPane,
     btnTest: Button,
     statusBar: HBox,
@@ -70,6 +71,8 @@ class FxMainWindowController(
     mainHeader.visible = true
     mainHeader.managed = true
   }
+
+  def changeSec(newSb: Option[SecBundle]): Unit = ci = ci.changeSec(newSb)
 
   val accounts: mutable.MutableList[Account] =
     mutable.MutableList(Account(new AccountId(1), new UserId(3), new CurrencyId(3), "TTTR", BankAccount, Timing.now))

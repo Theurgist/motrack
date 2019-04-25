@@ -1,11 +1,10 @@
 package cc.theurgist.motrack.ui.actors.command
 
-import akka.actor.{ActorRef, ActorSystem}
-import cats.effect.IO
-import akka.actor._
+import akka.actor.{ActorRef, ActorSystem, _}
 import akka.stream.Materializer
+import cats.effect.IO
 import cc.theurgist.motrack.lib.messages.{Exit, LoginAttempt, Logoff, UpdateServerStatus}
-import cc.theurgist.motrack.lib.security.LoginData
+import cc.theurgist.motrack.lib.security.{LoginData, SecBundle}
 import com.typesafe.scalalogging.StrictLogging
 
 /**
@@ -14,16 +13,17 @@ import com.typesafe.scalalogging.StrictLogging
   * @param commandActor command actor
   * @param owner actor which will receive command execution results
   */
-class CommandInterface private (commandActor: ActorRef)(implicit owner: ActorRef) extends StrictLogging {
+class CommandInterface private(commandActor: ActorRef, sb: Option[SecBundle] = None)(implicit owner: ActorRef) extends StrictLogging {
   logger.debug(s"CommandInterface for actor: $commandActor with owner: $owner")
 
   /**
     * Let another actor have it's own copy of this interface
     */
-  def lend(forOwner: ActorRef): CommandInterface = new CommandInterface(commandActor)(forOwner)
+  def lend(forOwner: ActorRef): CommandInterface = new CommandInterface(commandActor, sb)(forOwner)
+  def changeSec(newSb: Option[SecBundle]): CommandInterface = new CommandInterface(commandActor, newSb)(owner)
 
   def login(username: String, password: String): Unit = commandActor ! LoginAttempt(LoginData(username, password))
-  def logoff(): Unit = commandActor ! Logoff
+  def logoff(): Unit = commandActor ! (sb, Logoff)
 
   def updateServerStatus(): Unit = {
     commandActor ! UpdateServerStatus()

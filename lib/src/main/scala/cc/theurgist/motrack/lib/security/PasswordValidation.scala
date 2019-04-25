@@ -12,7 +12,7 @@ object PasswordValidation {
 
   // TODO secure
   def encrypt(rawPassword: String): PasswordData = {
-    PasswordData(EncryptedPassword(rawPassword + saltHolder), saltHolder)
+    PasswordData(EncryptedPassword(rawPassword), saltHolder)
   }
 
   // TODO secure
