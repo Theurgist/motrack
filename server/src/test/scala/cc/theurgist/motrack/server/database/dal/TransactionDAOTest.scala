@@ -11,7 +11,7 @@ class TransactionDAOTest extends WordSpec with BeforeAndAfterEach with Matchers 
   val dao = new TransactionDAO(ctx)
   val udao = new UserDAO
   val cdao = new CurrencyDAO(ctx)
-  val adao = new AccountDAO(ctx)
+  val adao = new AccountDAO
 
   "Transactions basic sums" should {
     "calculate right" in {
