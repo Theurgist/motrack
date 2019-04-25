@@ -8,7 +8,7 @@ object PasswordValidation {
 
   case class PasswordData(pwd: EncryptedPassword, salt: PasswordSalt)
 
-  private def saltHolder: PasswordSalt = PasswordSalt("-SALT-")
+  private def saltHolder: PasswordSalt = PasswordSalt("")
 
   // TODO secure
   def encrypt(rawPassword: String): PasswordData = {
@@ -17,6 +17,6 @@ object PasswordValidation {
 
   // TODO secure
   def validate(rawPassword: String, reference: PasswordData): Boolean = {
-    rawPassword + saltHolder == reference.pwd.encrypted
+    rawPassword == reference.pwd.encrypted
   }
 }

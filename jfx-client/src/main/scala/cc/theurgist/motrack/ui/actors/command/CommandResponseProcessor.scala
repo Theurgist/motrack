@@ -6,13 +6,9 @@ import akka.event.LoggingAdapter
 import akka.http.scaladsl.model.ResponseEntity
 import akka.http.scaladsl.unmarshalling.{Unmarshal, Unmarshaller}
 import akka.stream.Materializer
-import cc.theurgist.motrack.lib.config.CommonConfig
 import cc.theurgist.motrack.lib.dto.{Red, ServerStatus}
-import cc.theurgist.motrack.lib.model.security.session.SessionId
-import cc.theurgist.motrack.lib.model.security.user.SafeUser
-import cc.theurgist.motrack.ui.actors.{LoginAttempt, LoginResult, UpdateServerStatus}
-import cc.theurgist.motrack.ui.config.ClientConfig
-import cc.theurgist.motrack.ui.network.AkkaHttpRequester.ReqResponse
+import cc.theurgist.motrack.lib.messages.{LoginAttempt, LoginResult, ServersideError, UpdateServerStatus}
+import cc.theurgist.motrack.ui.network.AkkaHttpRequester.{ReqFailure, ReqResponse}
 import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport._
 import io.circe.generic.auto._
 
@@ -32,37 +28,30 @@ trait CommandResponseProcessor {
     * Process queried http responses
     */
   def response(implicit ac: ActorContext): Receive = {
-    case ReqResponse(cmd, initiator, outcome) =>
+
+    case ReqResponse(cmd, initiator, r) =>
       cmd match {
         case UpdateServerStatus() =>
-          outcome match {
-            case Right(r) =>
-              decode[ServerStatus](r.entity) match {
-                case Some(Success(status)) =>
-                  log.debug(s"PING RECV: $status")
-                  initiator ! status
-                case e => log.warning(s"PING ERR: $e")
-              }
-
-            case Left(e) =>
-              initiator ! ServerStatus(Red, "Server unreachable")
+          decode[ServerStatus](r.entity) match {
+            case Some(Success(status)) =>
+              log.debug(s"PING RECV: $status")
+              initiator ! status
+            case e => log.warning(s"PING ERR: $e")
           }
 
         case LoginAttempt(_) =>
-          outcome match {
-            case Right(r) =>
-              decode[(Long, SafeUser)](r.entity) match {
-                case Some(Success((sid, u))) =>
-                  initiator ! LoginResult(Right((new SessionId(sid), u)))
-                case e =>
-                  initiator ! LoginResult(Left(e.toString))
-              }
-            case Left(e) =>
+          decode[LoginResult](r.entity) match {
+            case Some(Success(loginResult)) => initiator ! LoginResult(loginResult.r)
           }
 
-        case unmatched =>
-          log.error(s"Unmatched http response for command $cmd: $outcome")
+        case _ =>
+          val msg = s"Unmatched http response for command $cmd: $r"
+          log.error(msg)
+          initiator ! ServersideError(msg)
       }
+
+    case ReqFailure(cmd, initiator, error) =>
+      initiator ! ServerStatus(Red, "Server unreachable", error.toString)
 
   }
 }

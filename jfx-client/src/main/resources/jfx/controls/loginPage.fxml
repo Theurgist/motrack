@@ -5,20 +5,24 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <VBox fillWidth="false" maxHeight="200.0" maxWidth="300.0" prefHeight="200.0" prefWidth="300.0" spacing="10.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cc.theurgist.motrack.ui.gui.controllers.FxLoginPageController">
    <children>
       <Label text="Login" />
-      <TextField fx:id="username" prefHeight="26.0" prefWidth="321.0" />
+      <TextField fx:id="username" onAction="#doLogin" prefHeight="26.0" prefWidth="321.0" text="vasya" />
       <Label text="Password" />
-      <PasswordField fx:id="password" prefHeight="26.0" prefWidth="300.0" />
+      <PasswordField fx:id="password" onAction="#doLogin" prefHeight="26.0" prefWidth="300.0" />
       <Button mnemonicParsing="false" onAction="#doLogin" prefHeight="26.0" prefWidth="378.0" text="Log in" />
       <Label fx:id="error" alignment="CENTER" prefHeight="19.0" prefWidth="357.0" textFill="RED">
          <font>
             <Font size="15.0" />
          </font>
+         <tooltip>
+            <Tooltip fx:id="errorTooltip" text="Empty Tooltip" />
+         </tooltip>
       </Label>
    </children>
    <padding>

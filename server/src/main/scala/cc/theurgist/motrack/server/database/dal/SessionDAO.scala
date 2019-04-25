@@ -10,7 +10,10 @@ class SessionDAO(implicit context: InmemContext) extends BaseCRUD[Session](conte
   import ctx._
   private val sessions = quote(querySchema[Session]("sessions"))
 
-  def create(o: Session): SessionId = ctx.run { quote(sessions.insert(lift(o)).returning(_.id)) }
+  def create(o: Session): SessionId = ctx.transaction {
+    delete(o.userId)
+    ctx.run(quote(sessions.insert(lift(o)).returning(_.id)))
+  }
 
   def delete(id: SessionId): Long = ctx.run { byId(id).delete }
   def delete(id: UserId): Long    = ctx.run { byUserId(id).delete }

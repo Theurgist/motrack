@@ -1,7 +1,7 @@
 package cc.theurgist.motrack.ui.gui.controllers
 
 import com.typesafe.scalalogging.StrictLogging
-import scalafx.scene.control.{Label, PasswordField, TextField}
+import scalafx.scene.control.{Label, PasswordField, TextField, Tooltip}
 import scalafx.scene.layout.VBox
 import scalafxml.core.macros.sfxml
 
@@ -21,6 +21,7 @@ class FxLoginPageController(
     val username: TextField,
     val password: PasswordField,
     val error: Label,
+    val errorTooltip: Tooltip,
 ) extends VBox with LoginPageController with StrictLogging {
   logger.trace("awakens: FxLoginPageController")
 
@@ -28,7 +29,10 @@ class FxLoginPageController(
   def doLogin(): Unit =
     loginAction(username.getText, password.getText)
 
-  def updateError(msg: String): Unit = error.text = msg
+  def updateError(msg: String): Unit = {
+    error.text = msg
+    errorTooltip.text = msg
+  }
 
   def reset(lastLogin: String): Unit = {
     username.text = lastLogin

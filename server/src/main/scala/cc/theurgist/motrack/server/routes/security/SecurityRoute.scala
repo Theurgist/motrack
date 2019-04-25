@@ -4,8 +4,10 @@ import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import cc.theurgist.motrack.lib.Timing
+import cc.theurgist.motrack.lib.messages.LoginResult
 import cc.theurgist.motrack.lib.model.security.session.{Session, SessionId}
-import cc.theurgist.motrack.lib.security.LoginData
+import cc.theurgist.motrack.lib.security.PasswordValidation.PasswordData
+import cc.theurgist.motrack.lib.security.{LoginData, PasswordValidation}
 import cc.theurgist.motrack.server.database.dal.{SessionDAO, UserDAO}
 import cc.theurgist.motrack.server.routes.RouteBranch
 import com.softwaremill.session.CsrfDirectives._
@@ -27,15 +29,19 @@ class SecurityRoute(implicit val ec: ExecutionContextExecutor) extends RouteBran
         entity(as[LoginData]) { ld =>
           ux.find(ld.username) match {
             case Some(u) =>
-              val s   = Session(SessionId.none, u.id, Timing.now, Timing.now)
-              val sid = sx.create(s)
-              mySetSession(sid.id) {
-                setNewCsrfToken(checkHeader) { ctx =>
-                  ctx.complete((sid.id, u.safePart))
+              if (PasswordValidation.validate(ld.password, PasswordData(u.password, u.salt))) {
+                val s   = Session(SessionId.none, u.id, Timing.now, Timing.now)
+                val sid = sx.create(s)
+                mySetSession(sid.id) {
+                  setNewCsrfToken(checkHeader) { ctx =>
+                    ctx.complete(LoginResult(Right(sid, u.safePart)))
+                  }
                 }
-              }
+              } else
+                complete(StatusCodes.Forbidden, LoginResult(Left("Login and/or password are not valid")))
+
             case None =>
-              complete(StatusCodes.Forbidden)
+              complete(StatusCodes.Forbidden, LoginResult(Left("Login and|or password are not valid")))
           }
         }
       }

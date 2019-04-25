@@ -5,15 +5,15 @@ import cc.theurgist.motrack.lib.Timing
 import cc.theurgist.motrack.lib.dto.ServerStatus
 import cc.theurgist.motrack.lib.model.account.{Account, AccountId, BankAccount}
 import cc.theurgist.motrack.lib.model.currency.CurrencyId
-import cc.theurgist.motrack.lib.model.security.user.UserId
+import cc.theurgist.motrack.lib.model.security.user.{SafeUser, UserId}
 import cc.theurgist.motrack.ui.actors.command.CommandInterface
 import com.typesafe.scalalogging.StrictLogging
 import scalafx.beans.value.ObservableValue
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.Cursor
-import scalafx.scene.control.{Button, ListCell, ListView}
+import scalafx.scene.control.{Button, ListCell, ListView, Tab, TabPane}
 import scalafx.scene.input.MouseEvent
-import scalafx.scene.layout.HBox
+import scalafx.scene.layout.{AnchorPane, HBox, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
 import scalafxml.core.macros.{nested, sfxml}
@@ -23,6 +23,9 @@ import scala.collection.mutable
 trait MainWindowController {
   def updateServerStatus(ss: ServerStatus): Unit
   def updateErrorLabel(errorMsg: String): Unit
+
+  def gotoLoggedOffEnv(): Unit
+  def gotoLoggedInEnv(user: SafeUser): Unit
 
   def exit(): Unit
 
@@ -36,17 +39,37 @@ trait MainWindowController {
 @sfxml
 class FxMainWindowController(
     ci: CommandInterface,
+    mainHeader: AnchorPane,
     btnTest: Button,
     statusBar: HBox,
     accountsList: ListView[Account],
+    mainTabs: TabPane,
+    tabLogin: Tab,
+    tabProperty: Tab,
+    tabSituation: Tab,
     @nested[FxServerStatusLabelController] val ssLabelController: ServerStatusLabelController,
     @nested[FxMainHeaderController] val mainHeaderController: MainHeaderController,
     @nested[FxLoginPageController] val loginPageController: LoginPageController,
-) extends HBox with MainWindowController with StrictLogging {
+) extends VBox with MainWindowController with StrictLogging {
   logger.trace("awakens: MainWindow")
 
-  loginPageController.loginAction = (u: String, p: String) => ci.login(u,p)
+  mainHeaderController.logoffAction = _ => ci.logoff()
+  loginPageController.loginAction = (u: String, p: String) => ci.login(u, p)
 
+  gotoLoggedOffEnv()
+
+  def gotoLoggedOffEnv(): Unit = {
+    mainTabs.tabs = List(tabLogin)
+    mainHeader.visible = false
+    mainHeader.managed = false
+  }
+
+  def gotoLoggedInEnv(user: SafeUser): Unit = {
+    loginPageController.reset(user.login)
+    mainTabs.tabs = List(tabProperty, tabSituation)
+    mainHeader.visible = true
+    mainHeader.managed = true
+  }
 
   val accounts: mutable.MutableList[Account] =
     mutable.MutableList(Account(new AccountId(1), new UserId(3), new CurrencyId(3), "TTTR", BankAccount, Timing.now))
@@ -80,7 +103,6 @@ class FxMainWindowController(
   def btnTestClick(event: MouseEvent): Unit = {
     btnTest.setText("CLICKIN")
     ci.updateServerStatus()
-    //initScene()
     updateAccounts(
       accounts ++ Seq(Account(new AccountId(1), new UserId(1), new CurrencyId(3), "ZZHA", BankAccount, Timing.now))
     )

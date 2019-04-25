@@ -11,7 +11,8 @@ class InfoRoute extends RouteBranch{
   def route: Route =
     get {
       path("status") {
-        complete(ServerStatus(Green, "Online"))
+        val ss = ServerStatus(Green, "Online")
+        complete(ss)
       }
     }
 }

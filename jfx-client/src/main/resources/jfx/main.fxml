@@ -59,7 +59,7 @@
       </menus>
     </MenuBar>
       <fx:include fx:id="mainHeader" source="controls/mainHeader.fxml" />
-      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+      <TabPane fx:id="mainTabs" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
         <tabs>
             <Tab fx:id="tabLogin" text="Login">
                <content>
@@ -70,7 +70,7 @@
                   </BorderPane>
                </content>
             </Tab>
-          <Tab text="Property">
+          <Tab fx:id="tabProperty" text="Property">
             <content>
                   <BorderPane>
                      <center>
@@ -114,7 +114,7 @@
                   </BorderPane>
             </content>
           </Tab>
-          <Tab text="Situation">
+          <Tab fx:id="tabSituation" text="Situation">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
             </content>
