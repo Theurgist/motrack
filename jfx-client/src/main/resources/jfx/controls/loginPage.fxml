@@ -11,10 +11,10 @@
 <VBox fillWidth="false" maxHeight="200.0" maxWidth="300.0" prefHeight="200.0" prefWidth="300.0" spacing="10.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cc.theurgist.motrack.ui.gui.controllers.FxLoginPageController">
    <children>
       <Label text="Login" />
-      <TextField fx:id="login" prefHeight="26.0" prefWidth="321.0" />
+      <TextField fx:id="username" prefHeight="26.0" prefWidth="321.0" />
       <Label text="Password" />
       <PasswordField fx:id="password" prefHeight="26.0" prefWidth="300.0" />
-      <Button fx:id="doLogin" mnemonicParsing="false" prefHeight="26.0" prefWidth="378.0" text="Log in" />
+      <Button mnemonicParsing="false" onAction="#doLogin" prefHeight="26.0" prefWidth="378.0" text="Log in" />
       <Label fx:id="error" alignment="CENTER" prefHeight="19.0" prefWidth="357.0" textFill="RED">
          <font>
             <Font size="15.0" />

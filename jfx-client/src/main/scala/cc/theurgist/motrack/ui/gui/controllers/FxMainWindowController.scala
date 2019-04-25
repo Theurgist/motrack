@@ -1,5 +1,6 @@
 package cc.theurgist.motrack.ui.gui.controllers
 
+import cats.effect.IO
 import cc.theurgist.motrack.lib.Timing
 import cc.theurgist.motrack.lib.dto.ServerStatus
 import cc.theurgist.motrack.lib.model.account.{Account, AccountId, BankAccount}
@@ -26,6 +27,10 @@ trait MainWindowController {
   def exit(): Unit
 
   def btnTestClick(event: MouseEvent): Unit
+
+  def ssLabelController: ServerStatusLabelController
+  def mainHeaderController: MainHeaderController
+  def loginPageController: LoginPageController
 }
 
 @sfxml
@@ -34,13 +39,14 @@ class FxMainWindowController(
     btnTest: Button,
     statusBar: HBox,
     accountsList: ListView[Account],
-    @nested[FxServerStatusLabelController] ssLabelController: ServerStatusLabelController,
-    @nested[FxMainHeaderController] mainHeaderController: MainHeaderController,
-    @nested[FxLoginPageController] loginPageController: LoginPageController,
-) extends MainWindowController with StrictLogging {
+    @nested[FxServerStatusLabelController] val ssLabelController: ServerStatusLabelController,
+    @nested[FxMainHeaderController] val mainHeaderController: MainHeaderController,
+    @nested[FxLoginPageController] val loginPageController: LoginPageController,
+) extends HBox with MainWindowController with StrictLogging {
   logger.trace("awakens: MainWindow")
 
-  loginPageController.loginAction = (u: String, p: String) => () //ci.
+  loginPageController.loginAction = (u: String, p: String) => ci.login(u,p)
+
 
   val accounts: mutable.MutableList[Account] =
     mutable.MutableList(Account(new AccountId(1), new UserId(3), new CurrencyId(3), "TTTR", BankAccount, Timing.now))

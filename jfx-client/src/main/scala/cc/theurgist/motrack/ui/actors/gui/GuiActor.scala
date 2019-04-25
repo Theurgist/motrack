@@ -1,10 +1,10 @@
 package cc.theurgist.motrack.ui.actors.gui
 
 import akka.actor.{FSM, Props}
-import akka.event.{Logging, LoggingReceive}
 import cc.theurgist.motrack.lib.dto.ServerStatus
+import cc.theurgist.motrack.lib.model.security.session.SessionId
 import cc.theurgist.motrack.lib.model.security.user.SafeUser
-import cc.theurgist.motrack.ui.actors.{LoginFailure, LoginSuccess, Logoff, ServerError}
+import cc.theurgist.motrack.ui.actors.{LoginResult, Logoff, ServerError}
 import cc.theurgist.motrack.ui.gui.controllers.MainWindowController
 import scalafx.application.Platform
 
@@ -15,7 +15,7 @@ case object LoggedIn                  extends GuiState
 
 trait GuiData
 case class Uninitialized(lastLogin: String) extends GuiData
-case class UserData(user: SafeUser)         extends GuiData
+case class UserData(sid: SessionId, user: SafeUser)         extends GuiData
 
 /**
   * Abstracted GUI interaction and FSM
@@ -26,11 +26,13 @@ class GuiActor(controller: => Option[MainWindowController]) extends FSM[GuiState
   startWith(LoggedOff, Uninitialized(""))
 
   when(LoggedOff) {
-    case Event(LoginSuccess(user), _) =>
-      goto(LoggedIn).using(UserData(user))
-    case Event(LoginFailure(error), _) =>
-      log.error("Failed to login")
-      stay
+    case Event(LoginResult(r), _) => r match {
+      case Right((sid, user)) =>
+        goto(LoggedIn).using(UserData(sid, user))
+      case Left(error) =>
+        guiExec(_.loginPageController.updateError(s"Login error: $error"))
+        stay()
+    }
   }
 
   when(LoggedIn) {

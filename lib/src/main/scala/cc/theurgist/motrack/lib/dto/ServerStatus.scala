@@ -7,6 +7,7 @@ import cc.theurgist.motrack.lib.model.Encoders
 
 case class ServerStatus(
     health: Health,
+    info: String,
     version: String,
     time: LocalDateTime,
     zonedTime: ZonedDateTime,
@@ -14,8 +15,9 @@ case class ServerStatus(
 )
 
 object ServerStatus extends Encoders {
-  def apply(): ServerStatus = new ServerStatus(
-    Green,
+  def apply(health: Health, info: String): ServerStatus = new ServerStatus(
+    health,
+    info,
     CommonConfig.protocolVersion,
     LocalDateTime.now,
     ZonedDateTime.now,

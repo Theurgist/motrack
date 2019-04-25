@@ -10,16 +10,16 @@
    <children>
       <AnchorPane prefHeight="30.0" prefWidth="28.0">
          <children>
-            <Circle fx:id="bulb" fill="DODGERBLUE" layoutX="14.0" layoutY="16.0" onMouseClicked="#bulbClicked" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+            <Circle fx:id="bulb" fill="WHITE" layoutX="14.0" layoutY="16.0" onMouseClicked="#bulbClicked" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
          </children>
       </AnchorPane>
-      <Label fx:id="infoLabel" maxHeight="1.7976931348623157E308" maxWidth="200.0" minWidth="200.0" prefHeight="30.0" prefWidth="464.0" text="Server state">
+      <Label fx:id="infoLabel" maxHeight="1.7976931348623157E308" maxWidth="200.0" minWidth="200.0" prefHeight="30.0" prefWidth="464.0" text="Server state unknown">
          <tooltip>
-            <Tooltip text="Azaza" />
+            <Tooltip fx:id="infoTooltip" text="No info ATM" />
          </tooltip></Label>
       <Label fx:id="errorLabel" maxHeight="1.7976931348623157E308" maxWidth="300.0" text="No errors">
          <tooltip>
-            <Tooltip text="Azaza" />
+            <Tooltip fx:id="errorTooltip" text="No info ATM" />
          </tooltip>
       </Label>
    </children>

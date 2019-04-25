@@ -34,8 +34,8 @@ object GuiInterface extends StrictLogging {
       for {
         _   <- IO(logger.trace(s"Ping №$no"))
         dur <- IO(FiniteDuration(ClientConfig.hostAutoping.toNanos, TimeUnit.NANOSECONDS))
-        _   <- timer.sleep(dur)
         _   <- IO(ci.updateServerStatus())
+        _   <- timer.sleep(dur)
         res <- autoPing(uiActor, ci, no + 1)
       } yield res
 
@@ -44,6 +44,7 @@ object GuiInterface extends StrictLogging {
       ref <- IO(system.actorOf(GuiActor.props(gui.ctlrMain), name))
       ci  <- IO(commandInterface.lend(ref))
       _   <- IO(gui.run(ci)(system.dispatcher))
+      _   <- timer.sleep(3 seconds)
       _   <- autoPing(ref, ci).start
     } yield ExitCode.Success
   }

@@ -20,9 +20,14 @@ trait ServerStatusLabelController {
 class FxServerStatusLabelController(
     val bulb: Circle,
     val infoLabel: Label,
+    val infoTooltip: Tooltip,
     val errorLabel: Label,
+    val errorTooltip: Tooltip,
 ) extends ServerStatusLabelController with StrictLogging {
   logger.trace("awakens: FxServerStatusLabel")
+
+  updateServerStatus(ServerStatus(Yellow, "Connecting..."))
+  updateErrorLabel("")
 
   def bulbClicked(e: MouseEvent): Unit = {
     bulb.setFill(new Color(Random.nextDouble(), Random.nextDouble(), Random.nextDouble(), 1.0))
@@ -34,15 +39,15 @@ class FxServerStatusLabelController(
       case Yellow => new Color(0.2, 1.0, 1.0, 0.3)
       case Green  => new Color(0.2, 1.0, 0.2, 0.2)
     })
-    infoLabel.setText(s"Version: ${ss.version}")
-    infoLabel.setTooltip(new Tooltip {
-      text = s"Updated at ${ss.zonedTime}"
-    }.delegate)
+
+    infoLabel.setText(s"[${ss.version}] ${ss.info}")
+    infoTooltip.text = s"Updated at ${ss.zonedTime}"
   }
 
   def updateErrorLabel(errorMsg: String): Unit = {
     if (errorMsg.nonEmpty) {
       errorLabel.text = errorMsg
+      errorTooltip.text = errorMsg
       errorLabel.visible = true
     } else
     errorLabel.visible = false

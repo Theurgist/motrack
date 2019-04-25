@@ -31,7 +31,7 @@ class SecurityRoute(implicit val ec: ExecutionContextExecutor) extends RouteBran
               val sid = sx.create(s)
               mySetSession(sid.id) {
                 setNewCsrfToken(checkHeader) { ctx =>
-                  ctx.complete(sid.id)
+                  ctx.complete((sid.id, u.safePart))
                 }
               }
             case None =>
