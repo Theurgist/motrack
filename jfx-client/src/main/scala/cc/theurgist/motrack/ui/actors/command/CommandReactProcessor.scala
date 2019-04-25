@@ -36,12 +36,14 @@ trait CommandReactProcessor extends Actor {
   def react: Receive = {
     case cmd: UpdateServerStatus =>
       http ! Req(GET, "info/status", cmd)
-
     case cmd: LoginAttempt =>
       http ! Req(POST, "security/do-login", cmd, cmd.data.asJson)
-
     case (sb: Option[SecBundle], Logoff) =>
       http ! Req(POST, "security/logoff", Logoff, headers = sb)
+
+    case (sb: Option[SecBundle], GetAccounts) =>
+      http ! Req(GET, "account/list", GetAccounts, headers = sb)
+
 
     case Exit =>
       log.info("Exiting application")

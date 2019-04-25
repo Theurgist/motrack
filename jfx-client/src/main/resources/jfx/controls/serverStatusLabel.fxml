@@ -24,7 +24,7 @@
          </padding></Label>
       <Label fx:id="errorLabel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#errorLabelClicked" text="No errors" textFill="RED">
          <tooltip>
-            <Tooltip fx:id="errorTooltip" text="No info ATM" />
+            <Tooltip fx:id="errorTooltip" text="Right-click for popup, doubleclick to dismiss" />
          </tooltip>
          <font>
             <Font name="System Bold" size="15.0" />

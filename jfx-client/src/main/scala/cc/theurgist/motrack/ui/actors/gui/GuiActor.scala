@@ -2,7 +2,7 @@ package cc.theurgist.motrack.ui.actors.gui
 
 import akka.actor.{FSM, Props}
 import cc.theurgist.motrack.lib.dto.ServerStatus
-import cc.theurgist.motrack.lib.messages.{LoginResult, Logoff, ServersideError}
+import cc.theurgist.motrack.lib.messages.{AccountsList, LoginResult, Logoff, ServersideError}
 import cc.theurgist.motrack.lib.model.security.session.SessionId
 import cc.theurgist.motrack.lib.model.security.user.SafeUser
 import cc.theurgist.motrack.lib.security.SecBundle
@@ -50,6 +50,12 @@ class GuiActor(controller: => Option[MainWindowController]) extends FSM[GuiState
         mw.gotoLoggedOffEnv()
       })
       goto(LoggedOff).using(Uninitialized(d.user.login))
+
+    case Event(AccountsList(list), _) =>
+      guiExec(mw => {
+        mw.updateAccounts(list)
+      })
+      stay
   }
 
   whenUnhandled {

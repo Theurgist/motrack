@@ -3,7 +3,7 @@ package cc.theurgist.motrack.ui.actors.command
 import akka.actor.{ActorRef, ActorSystem, _}
 import akka.stream.Materializer
 import cats.effect.IO
-import cc.theurgist.motrack.lib.messages.{Exit, LoginAttempt, Logoff, UpdateServerStatus}
+import cc.theurgist.motrack.lib.messages.{Exit, GetAccounts, LoginAttempt, Logoff, UpdateServerStatus}
 import cc.theurgist.motrack.lib.security.{LoginData, SecBundle}
 import com.typesafe.scalalogging.StrictLogging
 
@@ -25,9 +25,9 @@ class CommandInterface private(commandActor: ActorRef, sb: Option[SecBundle] = N
   def login(username: String, password: String): Unit = commandActor ! LoginAttempt(LoginData(username, password))
   def logoff(): Unit = commandActor ! (sb, Logoff)
 
-  def updateServerStatus(): Unit = {
-    commandActor ! UpdateServerStatus()
-  }
+  def updateServerStatus(): Unit = commandActor ! UpdateServerStatus()
+
+  def queryAccounts(): Unit = commandActor ! (sb, GetAccounts)
 
   def exit(): Unit = commandActor ! Exit
 }

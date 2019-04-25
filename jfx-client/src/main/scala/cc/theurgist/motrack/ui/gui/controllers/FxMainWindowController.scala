@@ -31,6 +31,7 @@ trait MainWindowController {
   def exit(): Unit
 
   def btnTestClick(event: MouseEvent): Unit
+  def updateAccounts(xs: List[Account]): Unit
 
   def ssLabelController: ServerStatusLabelController
   def mainHeaderController: MainHeaderController
@@ -105,16 +106,17 @@ class FxMainWindowController(
 
   def btnTestClick(event: MouseEvent): Unit = {
     btnTest.setText("CLICKIN")
-    ci.updateServerStatus()
-    updateAccounts(
-      accounts ++ Seq(Account(new AccountId(1), new UserId(1), new CurrencyId(3), "ZZHA", BankAccount, Timing.now))
-    )
+    //ci.updateServerStatus()
+    ci.queryAccounts()
+//    updateAccounts(
+//      accounts ++ Seq(Account(new AccountId(1), new UserId(1), new CurrencyId(3), "ZZHA", BankAccount, Timing.now))
+//    )
   }
 
   def updateServerStatus(ss: ServerStatus): Unit = ssLabelController.updateServerStatus(ss)
   def updateErrorLabel(errorMsg: String): Unit   = ssLabelController.updateErrorLabel(errorMsg)
 
-  def updateAccounts(xs: Seq[Account]): Unit = {
+  def updateAccounts(xs: List[Account]): Unit = {
     buf.addAll(xs: _*)
   }
 

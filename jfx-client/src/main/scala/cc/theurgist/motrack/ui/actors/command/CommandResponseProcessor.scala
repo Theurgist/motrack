@@ -8,6 +8,7 @@ import akka.http.scaladsl.unmarshalling.{Unmarshal, Unmarshaller}
 import akka.stream.Materializer
 import cc.theurgist.motrack.lib.dto.{Red, ServerStatus}
 import cc.theurgist.motrack.lib.messages._
+import cc.theurgist.motrack.lib.model.account.Account
 import cc.theurgist.motrack.lib.security.SecBundle
 import cc.theurgist.motrack.ui.network.AkkaHttpRequester.{ReqFailure, ReqResponse}
 import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport._
@@ -61,6 +62,16 @@ trait CommandResponseProcessor {
 
         case Logoff =>
           initiator ! Logoff
+
+        case GetAccounts =>
+          decode[List[Account]](r.entity) match {
+            case Some(Success(list)) =>
+              initiator ! AccountsList(list)
+            case somethingElse =>
+              val wtf = somethingElse.toString
+              log.error(wtf)
+              initiator ! ServersideError(wtf)
+          }
 
         case _ =>
           val msg = s"Unmatched http response for command $cmd: $r"

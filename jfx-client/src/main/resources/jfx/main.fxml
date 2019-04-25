@@ -96,7 +96,7 @@
                                     <content>
                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
-                                                <Button fx:id="btnTest" layoutX="74.0" layoutY="215.0" mnemonicParsing="false" onMouseClicked="#btnTestClick" text="Check server" />
+                                                <Button fx:id="btnTest" layoutX="14.0" layoutY="21.0" mnemonicParsing="false" onMouseClicked="#btnTestClick" text="Load accounts list" />
                                              </children>
                                           </AnchorPane>
                                     </content>

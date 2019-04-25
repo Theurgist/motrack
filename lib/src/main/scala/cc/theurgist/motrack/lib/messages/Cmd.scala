@@ -10,5 +10,7 @@ case object Logoff extends Cmd
 case class UpdateServerStatus() extends Cmd
 case class ServerError(message: String) extends Cmd
 
+case object GetAccounts extends Cmd
+
 case object Exit extends Cmd
 case object Terminate extends Cmd
